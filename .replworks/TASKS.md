@@ -16,12 +16,13 @@
     - A controlled upstream failure is distinguishable from explicit success, and any available failure reason is recorded without recording credentials.
     - The probe's output is sufficient for dependent implementation work to use only observed upstream behavior; every check has an executable pass/fail result.
 
-- [ ] T-003 Serve the public landing page
-  - Satisfies: PRODUCT_SPEC.md §§3, 5
+- [ ] T-003 Serve the public landing page and health check
+  - Satisfies: PRODUCT_SPEC.md §§3, 3.1, 5
   - External boundary: yes
   - Acceptance criteria:
     - A live-browser E2E check loads `/` without authentication at mobile and desktop viewport sizes.
     - The landing response is identical regardless of identity, and the page neither links to nor mentions `/purge`.
+    - An unauthenticated `GET /health` returns HTTP 200 with an empty body and does not contact an external service or expose configuration or credentials, as required by PRODUCT_SPEC.md §3.1 (H1, H2).
     - Landing-page failure does not change Protected Zone behavior, and Protected Zone failure does not change landing-page behavior, as required by ARCHITECTURE.md §9 (FB6, I8).
     - No application response sets or overrides the browser-cache lifetime for images served from `img.repl.net`, as required by PRODUCT_SPEC.md §5 and ARCHITECTURE.md §8 (AR10).
     - Unit tests pass where unit tests apply.

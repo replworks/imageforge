@@ -48,6 +48,27 @@ describe('public landing page', () => {
     expect(before.headers.get('cache-control')).toBeNull();
   });
 
+  it('H1 returns an empty success response without authentication', async () => {
+    const app = createApp(landingDocument);
+    const anonymous = await app.request('/health');
+    const withIdentity = await app.request('/health', {
+      headers: { 'Cf-Access-Jwt-Assertion': 'unverified-test-value' },
+    });
+
+    expect(anonymous.status).toBe(200);
+    expect(await anonymous.text()).toBe('');
+    expect(await withIdentity.text()).toBe('');
+  });
+
+  it('H2 keeps health output empty and unknown paths not found', async () => {
+    const app = createApp(landingDocument);
+    const health = await app.request('/health');
+    const unknown = await app.request('/other');
+
+    expect(health.headers.get('content-type')).toBeNull();
+    expect(unknown.status).toBe(404);
+  });
+
   it('S1 denies every purge path until identity verification is available', async () => {
     const app = createApp(landingDocument);
 
