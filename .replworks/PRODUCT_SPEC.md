@@ -1,4 +1,4 @@
-# PRODUCT_SPEC.md — SpeedCool (if.repl.net)
+# PRODUCT_SPEC.md — ImageForge (if.repl.net)
 
 Audience: AI agents. Not for human reading.
 

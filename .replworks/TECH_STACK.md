@@ -1,4 +1,4 @@
-# TECH_STACK.md — SpeedCool purge application
+# TECH_STACK.md — ImageForge purge application
 
 Audience: AI implementer. Technology choices and stack-bound rules only.
 Keywords MUST, MUST NOT are used in the RFC 2119 sense.
