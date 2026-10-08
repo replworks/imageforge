@@ -47,7 +47,7 @@
     - An invalid or missing catalog prevents the application from serving, as required by ARCHITECTURE.md §§8–9 (AR9, FB8).
     - Unit tests for catalog membership and validity pass where unit tests apply.
 
-- [ ] T-006 Purge exact image URLs
+- [X] T-006 Purge exact image URLs
   - Satisfies: PRODUCT_SPEC.md §§4.1–4.4
   - External boundary: yes
   - Acceptance criteria:
