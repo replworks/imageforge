@@ -27,7 +27,7 @@
     - No application response sets or overrides the browser-cache lifetime for images served from `img.repl.net`, as required by PRODUCT_SPEC.md §5 and ARCHITECTURE.md §8 (AR10).
     - Unit tests pass where unit tests apply.
 
-- [ ] T-004 Restrict the purge area to the operator
+- [X] T-004 Restrict the purge area to the operator
   - Satisfies: PRODUCT_SPEC.md §6
   - External boundary: yes
   - Acceptance criteria:
