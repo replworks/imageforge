@@ -5,7 +5,7 @@ import { loadConfig } from './config.js';
 
 const config = loadConfig(process.env);
 const landingDocument = await readFile(
-  new URL('../landing.html', import.meta.url),
+  new URL('../index.html', import.meta.url),
   'utf8',
 );
 const app = createApp(landingDocument);
