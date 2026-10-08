@@ -72,9 +72,9 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 ## 6. Deployment rules
 
 - Target: Coolify. One resource serves `if.repl.net`. Docker Compose MUST NOT be used.
-- Release: Coolify git integration deploys on push to the default branch.
+- Release: GitHub Actions MUST build a `linux/arm64` Docker image from the published release, push it to the private GitHub Container Registry package, and configure Coolify to pull and deploy that release-tagged image without building the source repository.
+- Container build MUST use `npm ci` and `npm run build`. Container start command MUST be `npm start`.
 - Install step MUST use `npm ci`.
-- Build step MUST run `npm run build`. Start command MUST be `npm start`.
 - CI system: GitHub Actions.
 - CI MUST run on pull requests and on pushes to the default branch: `npm ci`, `npm run typecheck`, `npm test`, `npm run build`.
 - License: none. `package.json` MUST set `"private": true`. No `LICENSE` file.
