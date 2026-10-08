@@ -1,11 +1,823 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ImageForge</title>
+    <title>SpeedCool - 강력한 이미지 CDN + Tailwind식 최적화</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://tally.so/widgets/embed.js" async></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-brand-dark: #0B0F19;
+        --color-brand-card: #161C2A;
+        --color-brand-accent: #3B82F6;
+        --color-brand-success: #10B981;
+      }
+    </style>
   </head>
-  <body>
-    <main></main>
+  <body class="bg-brand-dark text-gray-100 font-sans antialiased">
+    <!-- Nav -->
+    <nav class="border-b border-gray-800 bg-brand-dark/80 backdrop-blur-md sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">SpeedCool</span>
+        <div class="flex items-center space-x-6">
+          <a href="#features" class="text-sm text-gray-400 hover:text-white">특징</a>
+          <a href="#pricing" class="text-sm text-gray-400 hover:text-white">가격</a>
+          <button onclick="Tally.openPopup('0QgrQZ')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium">시작하기</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
+      <div class="inline-flex items-center space-x-2 bg-blue-950/50 border border-blue-800 text-blue-400 px-4 py-1.5 rounded-full text-xs font-medium mb-6">
+        <span>📢 서울·도쿄 리전 기반 초고속 이미지 최적화 CDN</span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-black tracking-tighter leading-tight">
+        대역폭 초과와 로딩 지연 없는 커머스를 위해<br>
+        <span class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">안정적인 이미지 CDN, SpeedCool</span>
+      </h1>
+      <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
+        이미지 URL 뒤에 간단한 쿼리 파라미터 한 줄만 추가하세요. 원본 이미지를 즉시 리사이징하고 가장 최신의 고효율 포맷(WebP/AVIF)으로 변환하여 저지연 로컬 CDN 네트워크를 통해 고객에게 가장 빠르게 전달합니다.
+      </p>
+      <div class="mt-10 flex flex-col items-center gap-2 justify-center">
+        <button onclick="Tally.openPopup('0QgrQZ')" class="px-10 py-4 bg-blue-600 hover:bg-blue-700 font-bold rounded-2xl text-lg transition shadow-lg shadow-blue-600/30 text-white">
+          무료 데모 테스트 및 도입 문의하기
+        </button>
+        <span class="text-xs text-gray-500">Free 티어는 개발 검증 및 테스트용으로 즉시 시작 가능</span>
+      </div>
+    </header>
+
+    <!-- Before/After Demo Section -->
+    <section class="max-w-4xl mx-auto px-6 py-12">
+      <div
+        class="bg-brand-card border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl"
+      >
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">
+            눈으로 확인하는 최적화 성능
+          </h2>
+          <p class="text-gray-400 text-sm md:text-base">
+            마우스 드래그나 터치로 원본 이미지와 SpeedCool 최적화 이미지의 화질
+            및 용량을 실시간으로 비교해 보세요.
+          </p>
+        </div>
+
+        <!-- Slider Container -->
+        <div
+          id="demo-slider-container"
+          class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-gray-800 select-none group cursor-ew-resize"
+        >
+          <!-- Before Image (Original) - Background -->
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=100"
+            class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            alt="Original Image"
+          />
+          <div
+            class="absolute top-4 left-4 bg-red-600/90 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm z-20"
+          >
+            Original (2.4 MB)
+          </div>
+
+          <!-- After Image (Optimized Container) -->
+          <div
+            id="optimized-image-clip"
+            class="absolute inset-0 overflow-hidden pointer-events-none z-10"
+            style="clip-path: inset(0 0 0 50%)"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=60&fm=webp"
+              class="absolute inset-0 w-full h-full object-cover"
+              alt="Optimized Image"
+            />
+          </div>
+          <div
+            class="absolute top-4 right-4 bg-emerald-600/90 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm z-20"
+          >
+            SpeedCool (84 KB - AVIF/WebP)
+          </div>
+
+          <!-- Slider Bar / Handle -->
+          <div
+            id="slider-drag-handle"
+            class="absolute inset-y-0 left-1/2 w-1 bg-white z-30 group-hover:bg-blue-400 transition-colors flex items-center justify-center pointer-events-none"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-white text-brand-dark shadow-xl flex items-center justify-center border border-gray-200 font-bold text-lg select-none"
+            >
+              ↔
+            </div>
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-gray-800/80"
+        >
+          <div
+            class="bg-brand-dark/50 border border-gray-800/60 p-4 rounded-2xl text-center"
+          >
+            <span class="text-xs text-gray-500 block mb-1">용량 절감률</span>
+            <div class="text-3xl font-black text-emerald-400">-96.5%</div>
+            <span class="text-[11px] text-gray-400 mt-1 block"
+              >2.4 MB ➔ 84 KB로 감소</span
+            >
+          </div>
+          <div
+            class="bg-brand-dark/50 border border-gray-800/60 p-4 rounded-2xl text-center"
+          >
+            <span class="text-xs text-gray-500 block mb-1"
+              >로딩 속도 (3G 환경)</span
+            >
+            <div class="text-3xl font-black text-blue-400">1.8초 ➔ 0.1초</div>
+            <span class="text-[11px] text-gray-400 mt-1 block"
+              >에지 캐싱 레이어로 18배 가속</span
+            >
+          </div>
+          <div
+            class="bg-brand-dark/50 border border-gray-800/60 p-4 rounded-2xl text-center"
+          >
+            <span class="text-xs text-gray-500 block mb-1"
+              >트래픽 절약 효과</span
+            >
+            <div class="text-3xl font-black text-violet-400">약 28배</div>
+            <span class="text-[11px] text-gray-400 mt-1 block"
+              >불필요한 대역폭 과금 차단</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem" class="max-w-5xl mx-auto px-6 py-16 border-t border-gray-800/80">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-sm font-bold text-red-400 uppercase tracking-widest">Pain Point</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mt-3 leading-tight">
+          트래픽이 몰리는 순간, 이미지 로딩 속도가 매출의 발목을 잡고 있진 않나요?
+        </h2>
+        <p class="mt-4 text-gray-400">
+          현대의 커머스 환경에서 고해상도 상품 이미지는 필수적이지만, 이를 최적화하지 못하면 치명적인 비즈니스 손실로 이어집니다.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-brand-card/50 border border-gray-800 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-red-950 text-red-400 rounded-xl flex items-center justify-center text-xl mb-4">📉</div>
+          <h3 class="text-lg font-bold text-white mb-2">사용자 이탈률 증가</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            최적화되지 않은 대용량 이미지는 모바일 네트워크 환경에서 로딩 지연을 유발하고, 이는 곧 잠재 고객의 이탈로 직결됩니다.
+          </p>
+        </div>
+        <div class="bg-brand-card/50 border border-gray-800 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-red-950 text-red-400 rounded-xl flex items-center justify-center text-xl mb-4">💸</div>
+          <h3 class="text-lg font-bold text-white mb-2">서버 비용 폭탄</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            불필요하게 낭비되는 이미지 대역폭(Bandwidth)은 클라우드 서버 요금(Vercel, AWS 등)을 기하급수적으로 늘리는 주원인입니다.
+          </p>
+        </div>
+        <div class="bg-brand-card/50 border border-gray-800 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-red-950 text-red-400 rounded-xl flex items-center justify-center text-xl mb-4">⚙️</div>
+          <h3 class="text-lg font-bold text-white mb-2">느리고 복잡한 파이프라인</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            개발자가 매번 이미지를 수동으로 편집하여 업로드하거나, 복잡한 자체 썸네일 생성 서버를 구축 및 관리해야 하는 번거로움이 반복됩니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Features -->
+    <section id="features" class="max-w-6xl mx-auto px-6 py-20 border-t border-gray-800">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-sm font-bold text-blue-400 uppercase tracking-widest">FEATURES</span>
+        <h2 class="text-4xl md:text-5xl font-black text-white mt-3 leading-tight">
+          강력한 CDN 기반,<br>더 쉬운 사용법까지
+        </h2>
+        <p class="mt-4 text-gray-400 text-lg">
+          SpeedCool은 두 가지 방식으로 사용할 수 있습니다.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Card 1: 기본 CDN 방식 -->
+        <div class="bg-brand-card border border-gray-800 rounded-3xl p-8 hover:border-gray-600 transition">
+          <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">🌐</div>
+          <h3 class="text-2xl font-bold text-white mb-3">1. 강력한 이미지 CDN</h3>
+          <p class="text-gray-400 leading-relaxed">
+            기존 이미지 URL 앞에 SpeedCool CDN을 붙이기만 하면 자동 압축, 리사이징, 
+            AVIF/WebP 변환, 강력한 캐싱이 적용됩니다. 원본 서버 트래픽을 1% 미만으로 줄여줍니다.
+          </p>
+          <ul class="mt-6 space-y-3 text-sm text-gray-300">
+            <li class="flex items-start">✔️ 최초 1회 fetch 후 에지 캐싱</li>
+            <li class="flex items-start">✔️ ?v=1 캐시 버그 자동 해결</li>
+            <li class="flex items-start">✔️ 서울/도쿄 저지연 에지 노드</li>
+          </ul>
+        </div>
+
+        <!-- Card 2: Utility Class 방식 -->
+        <div class="bg-brand-card border border-blue-500 rounded-3xl p-8 hover:border-blue-400 transition relative">
+          <div class="absolute -top-3 right-8 bg-blue-600 text-white text-xs px-4 py-1 rounded-full font-bold">추천</div>
+          <div class="w-12 h-12 bg-violet-950 text-violet-400 rounded-2xl flex items-center justify-center text-2xl mb-6">✦</div>
+          <h3 class="text-2xl font-bold text-white mb-3">2. Utility Class DSL</h3>
+          <p class="text-gray-400 leading-relaxed">
+            HTML에 클래스만 추가하면 SDK가 자동으로 최적화된 CDN URL로 변환해줍니다. 
+            코드 오염 없이 Tailwind처럼 사용할 수 있습니다.
+          </p>
+          <div class="mt-6 bg-brand-dark p-4 rounded-2xl font-mono text-sm">
+            &lt;img src="photo.jpg" class="sc-w-480 sc-h-320 sc-crop sc-auto" /&gt;
+          </div>
+          <p class="text-xs text-violet-400 mt-4">Next.js, Laravel, Vanilla JS 모두 지원</p>
+        </div>
+      </div>
+
+      <div
+        class="bg-brand-card border border-gray-800 rounded-2xl p-6 mt-14 md:p-8 shadow-2xl"
+      >
+        <div class="w-12 h-12 bg-amber-950 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mb-6">🔗</div>
+        <h2 class="text-2xl font-bold text-white mb-3">
+          3. 남의 회사 CDN 주소는 지우세요
+        </h2>
+        <p class="text-gray-400 mb-6 leading-relaxed">
+          타사 서비스 흔적을 완전히 지운 자체 브랜드 서브도메인을 제공합니다.
+          Nginx 레이어가 호스트 헤더를 역추론하여 원본을 자동 매핑하므로
+          소스코드 오염이 전혀 없습니다.
+        </p>
+
+        <!-- URL Compare Box -->
+        <div
+          class="space-y-3 bg-brand-dark p-4 rounded-xl border border-gray-800 text-xs md:text-sm font-mono"
+        >
+          <div class="flex flex-col md:flex-row md:items-center">
+            <span class="w-16 text-red-400 font-bold mb-1 md:mb-0">[원본]</span>
+            <span class="text-gray-500 break-all"
+              >http://www.repl.net/images/shoes.jpg</span
+            >
+          </div>
+          <div class="border-t border-gray-800/60 my-2"></div>
+          <div class="flex flex-col md:flex-row md:items-center">
+            <span class="w-16 text-emerald-400 font-bold mb-1 md:mb-0"
+              >[우아함]</span
+            >
+            <span class="text-emerald-400 break-all font-bold"
+              >https://cdn.repl.net/images/shoes.jpg?w=200&h=100&crop=center</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section
+      id="architecture"
+      class="max-w-6xl mx-auto px-6 py-16 border-t border-gray-800 bg-brand-dark/30"
+    >
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-sm font-bold text-blue-400 uppercase tracking-widest"
+          >System Architecture</span
+        >
+        <h2 class="text-3xl md:text-4xl font-black text-white mt-2">
+          기술 스택 & 아키텍처
+        </h2>
+        <p class="mt-4 text-gray-400 text-sm md:text-base">
+          SpeedCool은 세계적으로 검증된 초고속 오픈소스 기술과 글로벌 클라우드
+          에지 인프라를 <strong>최적의 조합</strong>으로 구성했습니다.
+        </p>
+      </div>
+
+      <!-- Flow Diagram -->
+      <div
+        class="bg-brand-card border border-gray-800 rounded-3xl p-8 mb-12 shadow-xl"
+      >
+        <h3 class="text-lg font-bold text-white mb-8 flex items-center">
+          <span class="w-2.5 h-2.5 bg-blue-500 rounded-full mr-2"></span>
+          이미지 최적화 요청 파이프라인 (Request Flow)
+        </h3>
+
+        <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-center">
+          <!-- Step 1 -->
+          <div
+            class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl text-center lg:col-span-1 min-h-[140px] flex flex-col justify-center"
+          >
+            <span class="text-xs text-blue-400 font-bold block mb-1"
+              >STEP 01</span
+            >
+            <span class="text-white font-extrabold text-sm block"
+              >사용자 요청</span
+            >
+            <span class="text-gray-500 text-[10px] mt-1 block"
+              >브라우저 이미지 로드</span
+            >
+          </div>
+
+          <!-- Arrow -->
+          <div
+            class="text-center text-gray-600 font-bold text-xl lg:col-span-1 rotate-90 lg:rotate-0"
+          >
+            ➔
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl text-center lg:col-span-1 min-h-[140px] flex flex-col justify-center relative group"
+          >
+            <div
+              class="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-[9px] text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
+            >
+              Edge Cache
+            </div>
+            <span class="text-xs text-blue-400 font-bold block mb-1"
+              >STEP 02</span
+            >
+            <span class="text-white font-extrabold text-sm block"
+              >글로벌 에지 노드</span
+            >
+            <span class="text-gray-500 text-[10px] mt-1 block"
+              >아시아 에지 캐시 검사</span
+            >
+          </div>
+
+          <!-- Arrow -->
+          <div
+            class="text-center text-gray-600 font-bold text-xl lg:col-span-1 rotate-90 lg:rotate-0"
+          >
+            ➔
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl text-center lg:col-span-1 min-h-[140px] flex flex-col justify-center"
+          >
+            <span class="text-xs text-blue-400 font-bold block mb-1"
+              >STEP 03</span
+            >
+            <span class="text-white font-extrabold text-sm block"
+              >스마트 프록시 레이어</span
+            >
+            <span class="text-gray-500 text-[10px] mt-1 block"
+              >도메인 매핑 & 캐시 갱신 필터</span
+            >
+          </div>
+
+          <!-- Arrow -->
+          <div
+            class="text-center text-gray-600 font-bold text-xl lg:col-span-1 rotate-90 lg:rotate-0"
+          >
+            ➔
+          </div>
+
+          <!-- Step 4 -->
+          <div
+            class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl text-center lg:col-span-1 min-h-[140px] flex flex-col justify-center"
+          >
+            <span class="text-xs text-blue-400 font-bold block mb-1"
+              >STEP 04</span
+            >
+            <span class="text-white font-extrabold text-sm block"
+              >이미지 변환 엔진</span
+            >
+            <span class="text-gray-500 text-[10px] mt-1 block"
+              >고성능 변환 엔진 기반 압축</span
+            >
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="max-w-6xl mx-auto px-6 py-20 border-t border-gray-800">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 class="text-4xl font-black text-white">비즈니스 규모에 맞춘 투명하고 직관적인 플랜</h2>
+        <p class="mt-4 text-gray-400">책임감 있는 유료 이미지 최적화 솔루션으로 비즈니스의 안정성을 더해줍니다</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+
+        <!-- Free (Test/Evaluation Only) -->
+        <div class="bg-brand-card/40 border border-gray-800/80 rounded-3xl p-8 flex flex-col justify-between h-full min-h-[460px] opacity-75 hover:opacity-100 transition">
+          <div>
+            <h4 class="text-gray-500 font-medium text-sm">Free (테스트/평가용)</h4>
+            <div class="mt-4 flex items-baseline text-white">
+              <span class="text-4xl font-black tracking-tight">₩0</span>
+              <span class="ml-1 text-sm text-gray-500">/ 영구 지원</span>
+            </div>
+            <p class="mt-4 text-gray-400 text-sm">
+              도입 전 기술 검증 및 API 연동 테스트용 플랜입니다. (상용 서비스 운영 부적합)
+            </p>
+            <ul class="mt-6 space-y-4 text-xs text-gray-400 border-t border-gray-800/60 pt-6">
+              <li class="flex items-center"><span class="text-gray-500 mr-2">✔</span> cdn.speedcool.com 기본 도메인</li>
+              <li class="flex items-center"><span class="text-gray-500 mr-2">✔</span> 기본 압축 · 리사이징 · WebP/AVIF</li>
+              <li class="flex items-center"><span class="text-gray-500 mr-2">✔</span> Utility Class 변환 지원</li>
+              <li class="flex items-center"><span class="text-gray-500 mr-2">✔</span> 50GB 월 전송량 제한</li>
+            </ul>
+          </div>
+          <button onclick="Tally.openPopup('0QgrQZ')" 
+                  class="mt-8 w-full bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white py-3 rounded-2xl font-medium text-sm transition">
+            테스트 시작하기
+          </button>
+        </div>
+
+        <!-- Basic -->
+        <div class="bg-brand-card border border-gray-800 rounded-3xl p-8 flex flex-col justify-between h-full min-h-[460px] hover:border-gray-700 transition">
+          <div>
+            <h4 class="text-blue-400 font-semibold text-sm">Basic</h4>
+            <div class="mt-4 flex items-baseline text-white">
+              <span class="text-4xl font-black tracking-tight">월 12,000원</span>
+            </div>
+            <p class="mt-4 text-gray-400 text-sm">
+              성장을 시작하는 초기 커머스 및 스타트업 서비스
+            </p>
+            <ul class="mt-6 space-y-4 text-sm text-gray-300 border-t border-gray-800 pt-6">
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 300GB 월 고속 전송량</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 서울/도쿄 초고속 CDN 캐싱</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 실시간 포맷 변환 및 기본 리사이징</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 원화 결제 & 세금계산서 발행 가능</li>
+            </ul>
+          </div>
+          <button onclick="Tally.openPopup('0QgrQZ')" 
+                  class="mt-8 w-full bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-2xl font-medium transition">
+            Basic 시작하기
+          </button>
+        </div>
+
+        <!-- Pro (Highlighted) -->
+        <div class="bg-brand-card border-2 border-blue-500 rounded-3xl p-8 relative shadow-xl shadow-blue-900/30 flex flex-col justify-between h-full min-h-[460px] hover:scale-[1.01] transition-transform">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-5 py-1.5 rounded-full tracking-wider">
+            RECOMMENDED
+          </div>
+          <div>
+            <h4 class="text-white font-bold text-sm">Pro</h4>
+            <div class="mt-4 flex items-baseline text-white">
+              <span class="text-4xl font-black tracking-tight">월 39,000원</span>
+            </div>
+            <p class="mt-4 text-gray-400 text-sm">
+              대규모 트래픽 분산과 고급 이미지 옵션이 필요한 비즈니스
+            </p>
+            <ul class="mt-6 space-y-4 text-sm text-gray-300 border-t border-gray-800 pt-6">
+              <li class="flex items-center text-white font-medium"><span class="text-emerald-400 mr-2">✔</span> 자체 커스텀 도메인 매핑</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 1.5TB 월 대용량 전송량</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 이미지 서명(Signature Key) 보안 기능</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 스마트 크롭 & 워터마크 자동 합성</li>
+              <li class="flex items-center"><span class="text-emerald-400 mr-2">✔</span> 우선 엔지니어 지원 & SLA 보장</li>
+            </ul>
+          </div>
+          <button onclick="Tally.openPopup('0QgrQZ')" 
+                  class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold shadow-lg transition">
+            Pro 시작하기
+          </button>
+        </div>
+      </div>
+    </section>
+
+        <!-- Plan 4 -->
+        <!--
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl p-8 flex flex-col justify-between h-full min-h-[460px]"
+        >
+          <div>
+            <h4 class="text-gray-400 font-medium text-sm">
+              B2B 마이크로 Managed
+            </h4>
+            <div class="mt-4 flex items-baseline text-white">
+              <span class="text-2xl font-black tracking-tight"
+                >월 10만~30만 원</span
+              >
+            </div>
+            <p class="mt-4 text-gray-400 text-sm">
+              독립 보안 환경 및 대형 트래픽 전용 인프라 관리가 필요한 기업
+            </p>
+            <ul
+              class="mt-6 space-y-4 text-sm text-gray-300 border-t border-gray-800 pt-6"
+            >
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">✔</span> 고객사 단독 AWS / NCP
+                계정 내 인프라 격리 빌딩
+              </li>
+              <li class="flex items-center text-gray-400">
+                <span class="text-blue-500 mr-2">✔</span> 트래픽 비용은 고객사
+                계정 직접 청구 (리스크 제로)
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">✔</span> 테라폼(Terraform) 기반
+                1분 자율 프로비저닝
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">✔</span> 24/7 완전 무정지(SLA)
+                자가 복구 파이프라인 연동
+              </li>
+            </ul>
+          </div>
+          <button
+            onclick="Tally.openPopup('0QgrQZ')"
+            class="mt-8 block w-full bg-gray-800 hover:bg-gray-700 text-white text-center font-bold py-3 rounded-xl transition border border-gray-700 text-sm"
+          >
+            문의하기
+          </button>
+        </div>
+      -->
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section
+      id="faq"
+      class="max-w-4xl mx-auto px-6 py-16 border-t border-gray-800"
+    >
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl font-black text-white">자주 묻는 질문 (FAQ)</h2>
+        <p class="mt-4 text-gray-400">
+          SpeedCool 서비스 이용과 비즈니스 지원에 대한 정직한 답변을 드립니다
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- FAQ 1 -->
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <button
+            class="w-full flex items-center justify-between p-6 text-left text-white font-bold hover:bg-gray-800/40 transition-colors focus:outline-none"
+            onclick="toggleFaq(this)"
+          >
+            <span>원화(KRW) 결제와 국내 법인용 세금계산서 발행이 가능한가요?</span>
+            <span
+              class="faq-icon text-gray-400 transition-transform duration-300"
+              >▼</span
+            >
+          </button>
+          <div
+            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <p
+              class="p-6 pt-0 text-gray-400 text-sm md:text-base leading-relaxed border-t border-gray-800/40"
+            >
+              네, 가능합니다. 해외 서비스처럼 매달 달러 결제 승인 확인이나 복잡한 해외 영수증 처리로 고통받으실 필요가 없습니다. 정식 세금계산서 발행을 통해 간편하게 지출 증빙을 처리하실 수 있습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <button
+            class="w-full flex items-center justify-between p-6 text-left text-white font-bold hover:bg-gray-800/40 transition-colors focus:outline-none"
+            onclick="toggleFaq(this)"
+          >
+            <span>기존 원본 이미지 저장소(AWS S3 등)를 그대로 사용할 수 있나요?</span>
+            <span
+              class="faq-icon text-gray-400 transition-transform duration-300"
+              >▼</span
+            >
+          </button>
+          <div
+            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <p
+              class="p-6 pt-0 text-gray-400 text-sm md:text-base leading-relaxed border-t border-gray-800/40"
+            >
+              기존에 이미지를 저장하고 계신 AWS S3, Google Cloud Storage 혹은 임의의 웹 서버 URL을 원본 저장소(Origin)로 등록만 하시면 즉시 연동됩니다. 이미지 파일을 다른 곳으로 이전하는 번거로운 작업이 전혀 필요하지 않습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <button
+            class="w-full flex items-center justify-between p-6 text-left text-white font-bold hover:bg-gray-800/40 transition-colors focus:outline-none"
+            onclick="toggleFaq(this)"
+          >
+            <span>다른 해외 이미지 최적화 솔루션과 비교했을 때 응답 속도가 얼마나 빠른가요?</span>
+            <span
+              class="faq-icon text-gray-400 transition-transform duration-300"
+              >▼</span
+            >
+          </button>
+          <div
+            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <p
+              class="p-6 pt-0 text-gray-400 text-sm md:text-base leading-relaxed border-t border-gray-800/40"
+            >
+              한국 사용자 기준, 물리적 거리가 먼 미국/유럽 리전 위주의 해외 서비스를 통과할 때에 비해 <strong>서울 및 도쿄 로컬 리전 캐시서버</strong>를 거치므로 첫 로딩 속도(Time to First Byte, TTFB) 및 이미지 전달 속도가 획기적으로 향상됩니다. (테스트 환경 및 네트워크 상황에 따라 체감 속도는 다를 수 있습니다.)
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <button
+            class="w-full flex items-center justify-between p-6 text-left text-white font-bold hover:bg-gray-800/40 transition-colors focus:outline-none"
+            onclick="toggleFaq(this)"
+          >
+            <span>무료(Free) 플랜을 상용 서비스에 바로 사용해도 되나요?</span>
+            <span
+              class="faq-icon text-gray-400 transition-transform duration-300"
+              >▼</span
+            >
+          </button>
+          <div
+            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <p
+              class="p-6 pt-0 text-gray-400 text-sm md:text-base leading-relaxed border-t border-gray-800/40"
+            >
+              Free 플랜은 어디까지나 개발 단계에서의 API 연동성 검증 및 속도 테스트를 위해 설계된 시범용 플랜입니다. 유량이 제한되어 있어 트래픽이 집중되면 로딩이 제한될 수 있으므로, 실제 고객이 접속하는 상용 서비스에서는 원활하고 안정적인 서빙을 위해 Basic 이상 플랜 적용을 권장합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div
+          class="bg-brand-card border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <button
+            class="w-full flex items-center justify-between p-6 text-left text-white font-bold hover:bg-gray-800/40 transition-colors focus:outline-none"
+            onclick="toggleFaq(this)"
+          >
+            <span>원본 이미지 보안이나 무단 도용 방지(워터마크 등)도 지원하나요?</span>
+            <span
+              class="faq-icon text-gray-400 transition-transform duration-300"
+              >▼</span
+            >
+          </button>
+          <div
+            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+          >
+            <p
+              class="p-6 pt-0 text-gray-400 text-sm md:text-base leading-relaxed border-t border-gray-800/40"
+            >
+              네, Pro 플랜 이상부터는 URL 서명(Signature Key)을 활용하여 인가되지 않은 비정상적 이미지 요청을 원천 차단하는 기능 및 저작권 보호를 위한 이미지 워터마크 자동 합성 기능을 완벽히 지원합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Differentiator & Trust Section -->
+    <section id="differentiation" class="max-w-6xl mx-auto px-6 py-16 border-t border-gray-800">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-sm font-bold text-blue-400 uppercase tracking-widest">Localization</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mt-2">
+          국내(한국) 비즈니스 환경에 최적화된 유일한 선택
+        </h2>
+        <p class="mt-4 text-gray-400">
+          기존의 글로벌 이미지 최적화 솔루션들은 국내 비즈니스 현실과 거리가 멀었습니다. SpeedCool은 독보적인 가치를 제공합니다.
+        </p>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="overflow-x-auto bg-brand-card border border-gray-800 rounded-3xl p-6 shadow-xl mb-16">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-800">
+              <th class="pb-4 text-sm font-bold text-gray-400 w-1/4">비교 항목</th>
+              <th class="pb-4 text-sm font-bold text-emerald-400 w-[37.5%] whitespace-nowrap">
+                <span>SpeedCool (국내 최적화)</span>
+              </th>
+              <th class="pb-4 text-sm font-bold text-gray-500 w-[37.5%]">글로벌 해외 솔루션 <span class="text-xs font-normal">(Cloudinary, imgix 등)</span></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800/60 text-sm md:text-base">
+            <tr>
+              <td class="py-4 font-semibold text-gray-300">전송 지연 속도 (Latency)</td>
+              <td class="py-4 text-emerald-400 font-semibold">서울/도쿄 리전 배치로 초저지연 응답</td>
+              <td class="py-4 text-gray-500">미국/유럽 리전 위주, 국내 접속 시 지연 발생</td>
+            </tr>
+            <tr>
+              <td class="py-4 font-semibold text-gray-300">결제 및 증빙 문서</td>
+              <td class="py-4 text-emerald-400 font-semibold">원화(KRW) 결제 및 세금계산서 발행 지원</td>
+              <td class="py-4 text-gray-500">달러 결제만 가능, 국내 세금계산서 발행 불가</td>
+            </tr>
+            <tr>
+              <td class="py-4 font-semibold text-gray-300">기술 문서 및 지원</td>
+              <td class="py-4 text-emerald-400 font-semibold">한국어 공식 문서 및 전담 엔지니어 지원</td>
+              <td class="py-4 text-gray-500">영어 문서 전용, 시차로 인한 지연 소통</td>
+            </tr>
+            <tr>
+              <td class="py-4 font-semibold text-gray-300">인프라 기반</td>
+              <td class="py-4 text-emerald-400 font-semibold">imgproxy 엔진 + 자체 가속 CDN 레이어</td>
+              <td class="py-4 text-gray-500">비공개 자체 솔루션 위주</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Trust Section -->
+      <div class="bg-gradient-to-br from-brand-card to-brand-dark border border-gray-800 rounded-3xl p-8 md:p-12">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider block mb-2">B2B Stability</span>
+            <h3 class="text-2xl md:text-3xl font-black text-white leading-tight">
+              무료 서비스는 언제 중단될지 모릅니다. <br>
+              <span class="text-blue-400">유료 솔루션인 SpeedCool이</span> 비즈니스의 안정성을 보장합니다.
+            </h3>
+            <p class="mt-4 text-gray-400 text-sm md:text-base leading-relaxed">
+              임시방편으로 사용하는 무료 이미지 프록시나 불안정한 공용 서버는 서비스가 갑자기 차단되거나 장애가 발생했을 때 비즈니스 손실을 보상해주지 않습니다. SpeedCool은 고객사와의 SLA(서비스 수준 합의서)를 준수하며, 철저하게 모니터링되는 인프라를 투명하게 제공합니다.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl">
+              <h4 class="text-white font-bold text-sm mb-1">✔️ 중단 없는 서비스 운영</h4>
+              <p class="text-gray-500 text-xs leading-relaxed">다중화 서버 구성과 로드 밸런싱을 통해 트래픽 급증 시에도 가용성을 유지합니다.</p>
+            </div>
+            <div class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl">
+              <h4 class="text-white font-bold text-sm mb-1">✔️ 보안과 안전성 중심</h4>
+              <p class="text-gray-500 text-xs leading-relaxed">이미지 실시간 요청 시 유효성을 검증하는 서명 토큰 기능으로 디도스(DDoS) 공격을 완벽히 차단합니다.</p>
+            </div>
+            <div class="bg-brand-dark/60 border border-gray-800 p-5 rounded-2xl">
+              <h4 class="text-white font-bold text-sm mb-1">✔️ 체계적인 리소스 관리</h4>
+              <p class="text-gray-500 text-xs leading-relaxed">캐싱 효율을 극대화하여 원본 이미지 서버로의 중복 요청을 방지하고 부하를 낮춥니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- CTA Section -->
+    <section id="cta" class="max-w-4xl mx-auto px-6 py-20 text-center">
+      <div class="bg-gradient-to-br from-blue-900/40 to-emerald-900/20 border border-gray-800 rounded-3xl p-8 md:p-12 relative overflow-hidden">
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-4">단 10초면 브랜드 고속 CDN이 열립니다</h2>
+        <p class="text-gray-400 max-w-xl mx-auto mb-8 text-sm md:text-base">
+          대시보드에 원본 주소와 사용하실 자체 도메인을 입력하고, DNS에 CNAME 한 줄만 추가하세요.
+        </p>
+        <div class="max-w-md mx-auto bg-brand-dark border border-gray-800 p-2 rounded-xl flex flex-col sm:flex-row gap-2">
+          <input id="cta-domain-input" type="text" placeholder="your-domain.com" 
+                 class="bg-transparent px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none flex-grow font-mono">
+          <button onclick="Tally.openPopup('0QgrQZ')" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg text-sm transition whitespace-nowrap">
+            CName 발급받기
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 bg-brand-dark/40 py-10 text-center text-xs text-gray-500 font-sans">
+      <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+        <span class="text-sm font-black tracking-tight text-gray-400">SpeedCool</span>
+        <div class="flex space-x-6 text-gray-500 font-medium">
+          <a href="#" class="hover:text-white transition">Docs</a>
+          <a href="#" class="hover:text-white transition">GitHub</a>
+          <a href="#" class="hover:text-white transition">Terms of Service</a>
+          <a href="#" class="hover:text-white transition">Privacy Policy</a>
+        </div>
+      </div>
+      <p class="text-gray-600 font-mono text-[11px]">© 2026 SpeedCool. Powered by Automation Pipelines. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Slider + FAQ Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Before/After Slider
+        const container = document.getElementById("demo-slider-container");
+        const clipElement = document.getElementById("optimized-image-clip");
+        const handle = document.getElementById("slider-drag-handle");
+
+        if (container && clipElement && handle) {
+          let isDragging = false;
+
+          const updateSlider = (clientX) => {
+            const rect = container.getBoundingClientRect();
+            let percentage = ((clientX - rect.left) / rect.width) * 100;
+            percentage = Math.max(0, Math.min(100, percentage));
+            clipElement.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+            handle.style.left = `${percentage}%`;
+          };
+
+          container.addEventListener("mousedown", (e) => { isDragging = true; updateSlider(e.clientX); });
+          window.addEventListener("mousemove", (e) => { if (isDragging) updateSlider(e.clientX); });
+          window.addEventListener("mouseup", () => isDragging = false);
+
+          container.addEventListener("touchstart", (e) => { isDragging = true; updateSlider(e.touches[0].clientX); }, { passive: true });
+          window.addEventListener("touchmove", (e) => { if (isDragging) updateSlider(e.touches[0].clientX); }, { passive: true });
+          window.addEventListener("touchend", () => isDragging = false);
+        }
+
+        // FAQ Toggle
+        window.toggleFaq = function(button) {
+          const answer = button.nextElementSibling;
+          const icon = button.querySelector(".faq-icon");
+          const isOpen = answer.style.maxHeight && answer.style.maxHeight !== "0px";
+
+          document.querySelectorAll(".faq-answer").forEach(el => {
+            el.style.maxHeight = "0px";
+            el.previousElementSibling.querySelector(".faq-icon").style.transform = "rotate(0deg)";
+          });
+
+          if (!isOpen) {
+            answer.style.maxHeight = answer.scrollHeight + "px";
+            icon.style.transform = "rotate(180deg)";
+          }
+        };
+      });
+    </script>
   </body>
 </html>
