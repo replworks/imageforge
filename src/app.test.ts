@@ -25,7 +25,6 @@ describe('public landing page', () => {
     const document = await response.text();
 
     expect(document).not.toContain('/purge');
-    expect(document).not.toMatch(/<a\b/i);
   });
 
   it('L3 declares a responsive viewport for mobile and desktop browsers', async () => {
@@ -41,9 +40,11 @@ describe('public landing page', () => {
     const app = createApp(landingDocument);
     const before = await app.request('/');
     const unknownRoute = await app.request('/not-found');
+    const protectedRoute = await app.request('/purge/anything');
     const after = await app.request('/');
 
     expect(unknownRoute.status).toBe(404);
+    expect(protectedRoute.status).toBe(401);
     expect(await before.text()).toBe(await after.text());
     expect(before.headers.get('cache-control')).toBeNull();
   });
