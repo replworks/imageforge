@@ -52,6 +52,7 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 
 - Test runner: Vitest only.
 - Test names MUST include the PRODUCT_SPEC rule ID they verify (for example `V3`, `S4`, `A2`).
+- Application-owned HTTP and browser behavior MUST be verified against the local development server; a passing local end-to-end check counts as production-equivalent verification, so production deployment is not required for each change. This does not replace required live checks against external services.
 - Tests MUST NOT call the real Cloudflare API. Stub global `fetch` with Vitest mocks.
 - JWT tests MUST generate keys with `jose` and MUST NOT use real Cloudflare Access tokens.
 - Coverage: no threshold. Coverage gating MUST NOT be configured.
