@@ -1,5 +1,13 @@
 # Release Notes
 
+## v0.1.1 - 2026-10-08
+
+### What's Changed
+
+* feat: enhance deployment workflow with image name resolution and error handling by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/10
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v0.1.0...v0.1.1
+
 ## v0.1.0 - 2026-10-08
 
 ### What's Changed
