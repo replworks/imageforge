@@ -12,6 +12,7 @@ const purgeDocument = await readFile(
   "utf8",
 );
 const denyIdentity: IdentityVerifier = async () => false;
+const allowIdentity: IdentityVerifier = async () => true;
 
 function createTestApp() {
   return createApp(landingDocument, purgeDocument, denyIdentity);
@@ -78,6 +79,19 @@ describe("public landing page", () => {
 
     expect(health.headers.get("content-type")).toBeNull();
     expect(unknown.status).toBe(404);
+  });
+
+  it("V1 serves the predefined catalog as a read-only service list", async () => {
+    const app = createApp(
+      landingDocument,
+      purgeDocument,
+      allowIdentity,
+      ["images", "avatars"],
+    );
+    const response = await app.request("/purge/catalog");
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ services: ["images", "avatars"] });
   });
 
   it("SA1 and SA2 deny all protected paths and methods without a valid identity", async () => {

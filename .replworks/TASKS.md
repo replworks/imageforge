@@ -38,7 +38,7 @@
     - No user, password, or session storage is used and no logout screen is available, as required by PRODUCT_SPEC.md §6 (S2, S5) and ARCHITECTURE.md §8 (AR6).
     - Unit tests for identity verification pass where unit tests apply.
 
-- [ ] T-005 Show the predefined service catalog in the operator console
+- [X] T-005 Show the predefined service catalog in the operator console
   - Satisfies: PRODUCT_SPEC.md §§4.2, 4.3, 4.4
   - External boundary: yes
   - Acceptance criteria:
