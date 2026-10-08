@@ -1,5 +1,15 @@
 # Release Notes
 
+## v0.2.0 - 2026-10-08
+
+### What's Changed
+
+* feat: enhance deployment process with QEMU and Docker Buildx setup for ARM64 images by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/11
+* feat: revamp landing page with new design and content by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/12
+* feat: implement identity verification and protected routes for purge functionality by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/13
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v0.1.1...v0.2.0
+
 ## v0.1.1 - 2026-10-08
 
 ### What's Changed
