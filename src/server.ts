@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { createIdentityVerifier } from './access.js';
 import { createApp } from './app.js';
 import { loadConfig } from './config.js';
+import { executePurgeCommand } from './purge.js';
 
 const config = loadConfig(process.env);
 const landingDocument = await readFile(
@@ -22,6 +23,14 @@ const app = createApp(
   purgeDocument,
   verifyIdentity,
   config.services,
+  (command) =>
+    executePurgeCommand(
+      command,
+      config.imageHost,
+      config.services,
+      config.cfZoneId,
+      config.cfApiToken,
+    ),
 );
 
 serve({

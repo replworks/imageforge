@@ -2,12 +2,21 @@ import { Hono } from 'hono';
 import { serveStatic } from '@hono/node-server/serve-static';
 import type { Context, Next } from 'hono';
 import type { IdentityVerifier } from './access.js';
+import type { PurgeCommand, PurgeExecutionResult } from './purge.js';
+
+export type PurgeExecutor = (
+  command: PurgeCommand,
+) => Promise<PurgeExecutionResult>;
 
 export function createApp(
   landingDocument: string,
   purgeDocument: string,
   verifyIdentity: IdentityVerifier,
   catalog: readonly string[] = [],
+  executePurge: PurgeExecutor = async () => ({
+    ok: false,
+    errors: ['Purge execution is not configured'],
+  }),
 ): Hono {
   const app = new Hono();
   const services = catalog.filter((service) => service.trim().length > 0);
@@ -44,6 +53,26 @@ export function createApp(
   app.get('/purge', (context) => context.redirect('/purge/'));
   app.get('/purge/', (context) => context.html(purgeDocument));
   app.get('/purge/catalog', (context) => context.json({ services }));
+  app.post('/purge/execute', async (context) => {
+    try {
+      const command = (await context.req.json()) as Partial<PurgeCommand>;
+      const result = await executePurge(command as PurgeCommand);
+
+      if (!result.ok) {
+        return context.json(result, 400);
+      }
+
+      return context.json(result, 200);
+    } catch {
+      return context.json(
+        {
+          ok: false,
+          errors: ['Invalid purge request payload'],
+        },
+        400,
+      );
+    }
+  });
   app.use(
     '/purge/assets/*',
     serveStatic({
