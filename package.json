@@ -10,7 +10,8 @@
     "build": "tsc -p tsconfig.json && vite build",
     "start": "node --env-file-if-exists=.env build/server.js",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "probe:purge-boundary": "node --env-file=.env scripts/purge-boundary-probe.mjs"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.4",
