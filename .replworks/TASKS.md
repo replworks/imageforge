@@ -1,0 +1,71 @@
+- [ ] T-001 Establish the project foundation
+  - Satisfies: PRODUCT_SPEC.md §§1, 3–6
+  - External boundary: no
+  - Acceptance criteria:
+    - All constraints in TECH_STACK.md are satisfied and the checks defined there pass.
+    - Missing or invalid required configuration prevents the application from serving any route, as required by ARCHITECTURE.md §§8–9.
+
+- [ ] T-002 Verify live purge-boundary behavior
+  - Satisfies: PRODUCT_SPEC.md §§4.1, 4.4
+  - External boundary: yes
+  - Acceptance criteria:
+    - An executable probe runs against the live Upstream Purge Service and Image Proxy referenced by ARCHITECTURE.md §§2, 7 and PRODUCT_SPEC.md §§1, 4.4.
+    - Purging a cached exact URL causes its next request to return MISS or EXPIRED, not HIT; the probe records the observed request/response contract and cache result.
+    - Purging a cached prefix causes the next requests for at least two previously cached variants with different query strings to return MISS or EXPIRED; the probe records the observed prefix semantics and cache results.
+    - A controlled upstream failure is distinguishable from explicit success, and any available failure reason is recorded without recording credentials.
+    - The probe's output is sufficient for dependent implementation work to use only observed upstream behavior; every check has an executable pass/fail result.
+
+- [ ] T-003 Serve the public landing page
+  - Satisfies: PRODUCT_SPEC.md §§3, 5
+  - External boundary: yes
+  - Acceptance criteria:
+    - A live-browser E2E check loads `/` without authentication at mobile and desktop viewport sizes.
+    - The landing response is identical regardless of identity, and the page neither links to nor mentions `/purge`.
+    - Landing-page failure does not change Protected Zone behavior, and Protected Zone failure does not change landing-page behavior, as required by ARCHITECTURE.md §9 (FB6, I8).
+    - No application response sets or overrides the browser-cache lifetime for images served from `img.repl.net`, as required by PRODUCT_SPEC.md §5 and ARCHITECTURE.md §8 (AR10).
+    - Unit tests pass where unit tests apply.
+
+- [ ] T-004 Restrict the purge area to the operator
+  - Satisfies: PRODUCT_SPEC.md §6
+  - External boundary: yes
+  - Acceptance criteria:
+    - A live-boundary E2E check confirms the operator can reach `/purge` and its protected operations with a valid identity assertion.
+    - Unauthenticated requests to `/purge`, `/purge/`, `/purge/anything`, and purge-execute requests are denied, including requests that bypass the edge.
+    - Missing, malformed, expired, invalid, or unverifiable identity assertions are denied before any protected component runs; denied responses do not reveal whether a path exists, as required by ARCHITECTURE.md §§3, 8–9 (AR1, AR7, FB1, FB7).
+    - The upstream credential is unavailable to the public landing page and never appears in a response or log; the purge application does not contact or alter the Image Proxy, as required by ARCHITECTURE.md §§7–8 (AR3, AR8, AR11, I7).
+    - No user, password, or session storage is used and no logout screen is available, as required by PRODUCT_SPEC.md §6 (S2, S5) and ARCHITECTURE.md §8 (AR6).
+    - Unit tests for identity verification pass where unit tests apply.
+
+- [ ] T-005 Show the predefined service catalog in the operator console
+  - Satisfies: PRODUCT_SPEC.md §§4.2, 4.3, 4.4
+  - External boundary: yes
+  - Acceptance criteria:
+    - An authenticated live-browser E2E check loads the configured predefined services into a select control; free-text service entry is unavailable.
+    - The catalog operation is read-only and causes no upstream purge request.
+    - An invalid or missing catalog prevents the application from serving, as required by ARCHITECTURE.md §§8–9 (AR9, FB8).
+    - Unit tests for catalog membership and validity pass where unit tests apply.
+
+- [ ] T-006 Purge exact image URLs
+  - Satisfies: PRODUCT_SPEC.md §§4.1–4.4
+  - External boundary: yes
+  - Acceptance criteria:
+    - An authenticated live-browser E2E check submits one or more URL-mode path lines and shows each resulting full URL on `img.repl.net` with its per-target success or failure.
+    - Leading slashes are normalized; every URL-mode path line must be non-empty; query strings are preserved character for character; duplicate targets collapse to one, as required by PRODUCT_SPEC.md §4.2 (V3) and ARCHITECTURE.md §11 (I9).
+    - Empty or whitespace-only input and any command containing an empty path line are rejected, and any rejected command makes zero upstream requests, as required by PRODUCT_SPEC.md §4.2 (V3, V6, V7) and ARCHITECTURE.md §9, §11 (FB2, I2).
+    - The selected service is restricted to the predefined catalog and every target uses only `img.repl.net`; a pasted full URL does not change the target host, as required by PRODUCT_SPEC.md §§4.1–4.2 (P3, V1, A3) and ARCHITECTURE.md §11 (I3, I4).
+    - Explicit upstream success is shown as success; upstream rejection, non-success, or timeout is shown as failure, with the upstream reason when available and “failed, reason unknown” otherwise. Outcomes retain target order, and mixed upstream request results are reported per target as required by ARCHITECTURE.md §9 (FB3–FB5) and PRODUCT_SPEC.md §4.3 (R1, R2).
+    - The success notice appears whenever at least one target succeeds and does not appear when none succeeds; results are cleared on reload, as required by PRODUCT_SPEC.md §4.3 (R3, R4) and ARCHITECTURE.md §12 (resolved decision 11).
+    - A successful live purge is followed by an exact-URL request returning MISS or EXPIRED, not HIT, as required by PRODUCT_SPEC.md §4.4 (A1).
+    - In a timed authenticated E2E run, completing the URL-purge workflow after the target path is ready takes less than 30 seconds, as required by PRODUCT_SPEC.md §8.
+    - Unit tests for validation, target composition, and outcome handling pass where unit tests apply.
+
+- [ ] T-007 Purge image URL prefixes
+  - Satisfies: PRODUCT_SPEC.md §§4.1–4.4
+  - External boundary: yes
+  - Acceptance criteria:
+    - An authenticated live-browser E2E check submits a prefix without a query string and shows the resulting prefix on `img.repl.net` with its success or failure.
+    - A prefix containing a query string is rejected without an upstream request; an empty or whitespace-only value is rejected without an upstream request.
+    - An empty prefix makes no upstream request until the operator explicitly confirms a prompt naming the selected service; only confirmation for that same service is accepted, as required by PRODUCT_SPEC.md §4.2 (V4, V5, V7) and ARCHITECTURE.md §§3, 11 (I2, I10).
+    - The live prefix purge invalidates cached variants with different query strings under the selected service and path prefix, so their next requests return MISS or EXPIRED, not HIT, as required by PRODUCT_SPEC.md §4.4 (A2, A5).
+    - Upstream rejection, non-success, or timeout is shown as failure, with the upstream reason when available and “failed, reason unknown” otherwise; success notice and reload behavior match PRODUCT_SPEC.md §4.3 (R1–R4) and ARCHITECTURE.md §9 (FB3–FB5).
+    - Unit tests for prefix validation, confirmation matching, and target composition pass where unit tests apply.
