@@ -61,7 +61,7 @@
     - In a timed authenticated E2E run, completing the URL-purge workflow after the target path is ready takes less than 30 seconds, as required by PRODUCT_SPEC.md §8.
     - Unit tests for validation, target composition, and outcome handling pass where unit tests apply.
 
-- [ ] T-007 Purge image URL prefixes
+- [X] T-007 Purge image URL prefixes
   - Satisfies: PRODUCT_SPEC.md §§4.1–4.4
   - External boundary: yes
   - Acceptance criteria:
