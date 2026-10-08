@@ -1,6 +1,13 @@
 import { Hono } from 'hono';
+import { serveStatic } from '@hono/node-server/serve-static';
+import type { Context, Next } from 'hono';
+import type { IdentityVerifier } from './access.js';
 
-export function createApp(landingDocument: string): Hono {
+export function createApp(
+  landingDocument: string,
+  purgeDocument: string,
+  verifyIdentity: IdentityVerifier,
+): Hono {
   const app = new Hono();
 
   app.get('/', (context) =>
@@ -11,12 +18,36 @@ export function createApp(landingDocument: string): Hono {
 
   app.get('/health', (context) => context.body(null, 200));
 
-  const denyProtectedRequest = (context: {
-    body: (data: null, status: 401) => Response;
-  }) => context.body(null, 401);
+  const protect = async (
+    context: Context,
+    next: Next,
+  ) => {
+    let allowed: boolean;
+    try {
+      allowed = await verifyIdentity(context.req.raw);
+    } catch {
+      allowed = false;
+    }
 
-  app.all('/purge', denyProtectedRequest);
-  app.all('/purge/*', denyProtectedRequest);
+    if (!allowed) {
+      return context.body(null, 401);
+    }
+
+    await next();
+  };
+
+  app.use('/purge', protect);
+  app.use('/purge/*', protect);
+
+  app.get('/purge', (context) => context.redirect('/purge/'));
+  app.get('/purge/', (context) => context.html(purgeDocument));
+  app.use(
+    '/purge/assets/*',
+    serveStatic({
+      root: './dist',
+      rewriteRequestPath: (path) => path.replace(/^\/purge/, ''),
+    }),
+  );
 
   return app;
 }
