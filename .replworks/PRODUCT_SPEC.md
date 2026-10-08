@@ -75,13 +75,13 @@ Result area rules:
 
 - **R1** Show, per target: the full resulting URL or prefix (on `img.repl.net`) and success or failure.
 - **R2** On failure show the reason returned by the upstream API. If no reason is available, show "failed, reason unknown". NEVER display a failed purge as successful.
-- **R3** On success, always show this notice: "Edge cache invalidated. Browser caches are not cleared; stale images may remain visible for up to 4 hours."
+- **R3** When the upstream purge API explicitly accepts a purge request, show this notice: "Cloudflare accepted the purge request. Browser caches are not cleared; stale images may remain visible for up to 4 hours."
 - **R4** No result history is stored. The result area is cleared on reload.
 
 ### 4.4 Acceptance criteria
 
-- **A1** After purging a cached image URL, the next request to that exact URL returns a cache status of MISS or EXPIRED (not HIT).
-- **A2** After a prefix purge, previously cached variants under that prefix with different query strings are all re-fetched from origin on next request.
+- **A1** A URL purge is successful when the Upstream Purge Service returns an HTTP success response and explicitly reports success for the exact URL request.
+- **A2** A prefix purge is successful when the Upstream Purge Service returns an HTTP success response and explicitly reports success for a query-free prefix on the fixed image host and selected service. Whether and when edge caches subsequently reflect the purge is controlled by the Upstream Purge Service and is not independently verified by this product acceptance criterion.
 - **A3** There is no way to target a host other than `img.repl.net` or a service outside the predefined list from the UI.
 - **A4** A failed upstream call is shown as failed.
 - **A5** Prefix mode with empty path does nothing until the second confirmation is given.

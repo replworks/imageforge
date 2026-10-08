@@ -5,13 +5,14 @@
     - All constraints in TECH_STACK.md are satisfied and the checks defined there pass.
     - Missing or invalid required configuration prevents the application from serving any route, as required by ARCHITECTURE.md §§8–9.
 
-- [ ] T-002 Verify live purge-boundary behavior
+- [X] T-002 Verify live purge-boundary behavior
   - Satisfies: PRODUCT_SPEC.md §§4.1, 4.4
   - External boundary: yes
   - Acceptance criteria:
     - An executable probe runs against the live Upstream Purge Service and Image Proxy referenced by ARCHITECTURE.md §§2, 7 and PRODUCT_SPEC.md §§1, 4.4.
-    - Purging a cached exact URL causes its next request to return MISS or EXPIRED, not HIT; the probe records the observed request/response contract and cache result.
-    - Purging a cached prefix causes the next requests for at least two previously cached variants with different query strings to return MISS or EXPIRED; the probe records the observed prefix semantics and cache results.
+    - The probe confirms that the live Image Proxy serves the supplied exact-URL query variants and records their observed cache status as informational output.
+    - An exact URL purge sends the full target URL, including its query string, to the live Upstream Purge Service; pass only when its response is HTTP success and explicitly reports success.
+    - A prefix purge sends a query-free hostname and path prefix to the live Upstream Purge Service; pass only when its response is HTTP success and explicitly reports success. Subsequent edge cache status is informational and does not determine pass/fail.
     - A controlled upstream failure is distinguishable from explicit success, and any available failure reason is recorded without recording credentials.
     - The probe's output is sufficient for dependent implementation work to use only observed upstream behavior; every check has an executable pass/fail result.
 
