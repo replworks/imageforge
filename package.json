@@ -1,6 +1,7 @@
 {
   "name": "imageforge",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": "^24"
