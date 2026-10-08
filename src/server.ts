@@ -1,9 +1,14 @@
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
+import { readFile } from 'node:fs/promises';
+import { createApp } from './app.js';
 import { loadConfig } from './config.js';
 
 const config = loadConfig(process.env);
-const app = new Hono();
+const landingDocument = await readFile(
+  new URL('../landing.html', import.meta.url),
+  'utf8',
+);
+const app = createApp(landingDocument);
 
 serve({
   fetch: app.fetch,
