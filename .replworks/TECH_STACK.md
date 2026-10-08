@@ -6,7 +6,7 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 ## 1. Languages / runtimes / frameworks / libraries
 
 - Scope: the purge application, plus the landing page where stated.
-- Landing page: one static HTML file in the same repository and the same deployed application as the purge application. CSS: Tailwind CSS v4 loaded with `<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>`. No build step. No JavaScript framework.
+- Landing page: `index.html` at the project root, served at `/` by the same deployed application as the purge application. CSS: Tailwind CSS v4 loaded with `<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>`. No build step. No JavaScript framework.
 - Runtime: Node.js 24.x (Active LTS). `package.json` `engines.node` MUST be `^24`.
 - Language: TypeScript `^7.0.2`.
 - Server compile/run: `tsc` compiles, `node` runs the compiled output.
@@ -28,7 +28,8 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 
 - `package.json`, `package-lock.json`, `tsconfig.json`.
 - `vite.config.ts` holds both Vite and Vitest configuration (`test` key).
-- `index.html` is the Vite entry at project root.
+- `index.html` at project root is the static landing page and MUST NOT be a Vite build input.
+- `purge/index.html` is the Vite entry for the operator application and MUST be served at `/purge/`.
 - `.github/workflows/` holds CI workflow files.
 - Vite `base` MUST be `/purge/`.
 - Landing HTML MUST NOT reference Vite-built assets.

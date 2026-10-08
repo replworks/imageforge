@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createApp } from './app.js';
 
 const landingDocument = await readFile(
-  new URL('../landing.html', import.meta.url),
+  new URL('../index.html', import.meta.url),
   'utf8',
 );
 
@@ -37,7 +37,7 @@ describe('public landing page', () => {
     );
   });
 
-  it('FB6 keeps the public document independent from unknown routes and cache policy', async () => {
+  it('L1 keeps the public document independent from unknown routes and cache policy', async () => {
     const app = createApp(landingDocument);
     const before = await app.request('/');
     const unknownRoute = await app.request('/not-found');
@@ -46,5 +46,13 @@ describe('public landing page', () => {
     expect(unknownRoute.status).toBe(404);
     expect(await before.text()).toBe(await after.text());
     expect(before.headers.get('cache-control')).toBeNull();
+  });
+
+  it('S1 denies every purge path until identity verification is available', async () => {
+    const app = createApp(landingDocument);
+
+    for (const path of ['/purge', '/purge/', '/purge/anything']) {
+      expect((await app.request(path)).status).toBe(401);
+    }
   });
 });

@@ -9,5 +9,12 @@ export function createApp(landingDocument: string): Hono {
     }),
   );
 
+  const denyProtectedRequest = (context: {
+    body: (data: null, status: 401) => Response;
+  }) => context.body(null, 401);
+
+  app.all('/purge', denyProtectedRequest);
+  app.all('/purge/*', denyProtectedRequest);
+
   return app;
 }
