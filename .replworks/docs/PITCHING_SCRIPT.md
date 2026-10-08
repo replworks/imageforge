@@ -1,4 +1,4 @@
-# PITCHING_SCRIPT.md — SpeedCool
+# PITCHING_SCRIPT.md — ImageForge
 
 > 목적: 나중에 "내가 이걸 왜 하려고 했지?"를 떠올리기 위한 문서. 사람이 읽는다.
 > 대상(Target Audience): **미지정** — 아래 본문은 대상 중립. 대상이 정해지면 9번 항목만 바꿔 쓴다.

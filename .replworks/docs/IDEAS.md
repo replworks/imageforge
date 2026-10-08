@@ -1,4 +1,4 @@
-# IDEAS.md — SpeedCool (이미지 리사이징 + CDN 서비스)
+# IDEAS.md — ImageForge (이미지 리사이징 + CDN 서비스)
 
 > 목적: "이걸 실행할 것인가, 말 것인가"를 사람이 판단하기 위한 문서.
 > 정밀성은 PRODUCT_SPEC / ARCHITECTURE 단계에서 확보한다. 여기서는 판단 근거만 적는다.

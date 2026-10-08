@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — SpeedCool (if.repl.net)
+# ARCHITECTURE.md — ImageForge (if.repl.net)
 
 Audience: AI implementer. Technology-agnostic by design.
 Keywords MUST, MUST NOT are used in the RFC 2119 sense.
