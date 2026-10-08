@@ -15,7 +15,7 @@ Rule IDs from PRODUCT_SPEC.md (L1, V3, S4, A5, ...) are referenced, not restated
 ## 2. Core Concepts
 
 - **Application**: the set of components C1–C8 below. One application serves the whole host.
-- **Public Zone**: the request path exactly `/`.
+- **Public Zone**: the request path exactly `/` or `/health`.
 - **Protected Zone**: the request path `/purge` and every path below it, whether or not that path exists.
 - **Unknown Zone**: every other request path.
 - **Operator**: the single owner. Identity policy (who counts as the operator) lives in the Edge Identity Layer, not in this application.
@@ -39,6 +39,11 @@ Rule IDs from PRODUCT_SPEC.md (L1, V3, S4, A5, ...) are referenced, not restated
 1. Request for `/` arrives at C1.
 2. C1 classifies it Public Zone and dispatches to C3.
 3. C3 returns the landing document. No identity check occurs.
+
+**Flow 1a — Health check**
+
+1. A `GET /health` request arrives at C1.
+2. C1 returns HTTP 200 with an empty body without invoking C2 or any external party.
 
 **Flow 2 — Operator opens the console**
 
@@ -85,9 +90,9 @@ Rule IDs from PRODUCT_SPEC.md (L1, V3, S4, A5, ...) are referenced, not restated
 
 ### C1 Request Gate
 
-- **Responsibilities**: classify each request path into Public, Protected, or Unknown Zone; for Protected, invoke C2 first and proceed only on Allow; dispatch to C3, C4, the `catalog` operation (C6), or the `execute` operation (C7 then C8); answer Unknown Zone with a not-found response; produce the denial response.
+- **Responsibilities**: classify each request path into Public, Protected, or Unknown Zone; return an empty HTTP 200 response for `GET /health`; for other Protected requests, invoke C2 first and proceed only on Allow; dispatch to C3, C4, the `catalog` operation (C6), or the `execute` operation (C7 then C8); answer Unknown Zone with a not-found response; produce the denial response.
 - **Inputs**: every inbound request.
-- **Outputs**: dispatched request, denial response, or not-found response.
+- **Outputs**: dispatched request, health response, denial response, or not-found response.
 - **Owns**: zone classification; the ordering "verify before resolve".
 - **Does not own**: the identity decision (C2), any validation (C7).
 

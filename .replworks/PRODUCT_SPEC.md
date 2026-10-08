@@ -38,6 +38,11 @@ Keywords MUST, MUST NOT, SHOULD are used in the RFC 2119 sense.
   - **L3** `/` MUST work on mobile and desktop viewports.
   - **L4** Not in scope: sign-up, login, pricing, billing, dashboards.
 
+### 3.1 Health check
+
+- **H1** `GET /health` MUST be publicly reachable without authentication and return HTTP 200 with an empty response body when the application has started successfully.
+- **H2** The health check MUST NOT contact external services or expose configuration or credentials. It reports only that the application process initialized and is serving requests.
+
 ## 4. Purge tool (`/purge`)
 
 Purpose: after an image is replaced, invalidate its cached copies immediately.

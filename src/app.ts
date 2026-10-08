@@ -9,6 +9,8 @@ export function createApp(landingDocument: string): Hono {
     }),
   );
 
+  app.get('/health', (context) => context.body(null, 200));
+
   const denyProtectedRequest = (context: {
     body: (data: null, status: 401) => Response;
   }) => context.body(null, 401);
