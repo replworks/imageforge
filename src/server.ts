@@ -17,7 +17,12 @@ const verifyIdentity = createIdentityVerifier(
   config.cfAccessTeamDomain,
   config.cfAccessAud,
 );
-const app = createApp(landingDocument, purgeDocument, verifyIdentity);
+const app = createApp(
+  landingDocument,
+  purgeDocument,
+  verifyIdentity,
+  config.services,
+);
 
 serve({
   fetch: app.fetch,

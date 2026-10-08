@@ -7,8 +7,10 @@ export function createApp(
   landingDocument: string,
   purgeDocument: string,
   verifyIdentity: IdentityVerifier,
+  catalog: readonly string[] = [],
 ): Hono {
   const app = new Hono();
+  const services = catalog.filter((service) => service.trim().length > 0);
 
   app.get('/', (context) =>
     context.html(landingDocument, 200, {
@@ -41,6 +43,7 @@ export function createApp(
 
   app.get('/purge', (context) => context.redirect('/purge/'));
   app.get('/purge/', (context) => context.html(purgeDocument));
+  app.get('/purge/catalog', (context) => context.json({ services }));
   app.use(
     '/purge/assets/*',
     serveStatic({
