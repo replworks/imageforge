@@ -1,0 +1,71 @@
+name: Build and deploy
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing GitHub Release tag to deploy
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coolify-production-deploy
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Resolve release commit
+        id: release
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Pin release commit and deploy
+        env:
+          COOLIFY_API_URL: ${{ secrets.COOLIFY_API_URL }}
+          COOLIFY_APPLICATION_UUID: ${{ secrets.COOLIFY_APPLICATION_UUID }}
+          COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+        run: |
+          set -euo pipefail
+
+          : "${COOLIFY_API_URL:?}"
+          : "${COOLIFY_APPLICATION_UUID:?}"
+          : "${COOLIFY_API_TOKEN:?}"
+          : "${RELEASE_SHA:?}"
+
+          application_url="${COOLIFY_API_URL%/}/api/v1/applications/${COOLIFY_APPLICATION_UUID}"
+
+          payload="$(jq -n --arg sha "$RELEASE_SHA" \
+            '{git_commit_sha: $sha, is_auto_deploy_enabled: false}')"
+
+          curl --fail-with-body --silent --show-error \
+            --request PATCH \
+            --url "$application_url" \
+            --header "Authorization: Bearer ${COOLIFY_API_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data "$payload" \
+            --output /dev/null
+
+          response="$(curl --fail-with-body --silent --show-error \
+            --request POST \
+            --url "${application_url}/start?force=true" \
+            --header "Authorization: Bearer ${COOLIFY_API_TOKEN}")"
+          deployment_uuid="$(jq -er '.deployment_uuid | strings | select(length > 0)' \
+            <<< "$response")"
+
+          printf 'Release %s (%s) queued as deployment %s\n' \
+            "$RELEASE_TAG" "$RELEASE_SHA" "$deployment_uuid"
