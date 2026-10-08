@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 concurrency:
   group: coolify-production-deploy
@@ -29,43 +30,82 @@ jobs:
         with:
           ref: ${{ env.RELEASE_TAG }}
 
-      - name: Resolve release commit
-        id: release
-        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Resolve image name
+        id: image
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 
-      - name: Pin release commit and deploy
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push release image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ env.RELEASE_TAG }}
+          labels: org.opencontainers.image.version=${{ env.RELEASE_TAG }}
+
+      - name: Point Coolify at the release image and deploy
         env:
           COOLIFY_API_URL: ${{ secrets.COOLIFY_API_URL }}
           COOLIFY_APPLICATION_UUID: ${{ secrets.COOLIFY_APPLICATION_UUID }}
           COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
-          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+          IMAGE_NAME: ${{ steps.image.outputs.name }}
+          IMAGE_TAG: ${{ env.RELEASE_TAG }}
         run: |
           set -euo pipefail
 
           : "${COOLIFY_API_URL:?}"
           : "${COOLIFY_APPLICATION_UUID:?}"
           : "${COOLIFY_API_TOKEN:?}"
-          : "${RELEASE_SHA:?}"
+          : "${IMAGE_NAME:?}"
+          : "${IMAGE_TAG:?}"
 
-          application_url="${COOLIFY_API_URL%/}/api/v1/applications/${COOLIFY_APPLICATION_UUID}"
+          api_base="${COOLIFY_API_URL%/}"
+          if [[ "$api_base" != */api/v1 ]]; then
+            api_base="${api_base}/api/v1"
+          fi
+          application_url="${api_base}/applications/${COOLIFY_APPLICATION_UUID}"
 
-          payload="$(jq -n --arg sha "$RELEASE_SHA" \
-            '{git_commit_sha: $sha, is_auto_deploy_enabled: false}')"
+          payload="$(jq -n \
+            --arg image "$IMAGE_NAME" \
+            --arg tag "$IMAGE_TAG" \
+            '{docker_registry_image_name: $image, docker_registry_image_tag: $tag, is_auto_deploy_enabled: false}')"
 
-          curl --fail-with-body --silent --show-error \
+          patch_response="$(curl --silent --show-error --write-out $'\n%{http_code}' \
             --request PATCH \
             --url "$application_url" \
+            --header "Accept: application/json" \
             --header "Authorization: Bearer ${COOLIFY_API_TOKEN}" \
             --header "Content-Type: application/json" \
-            --data "$payload" \
-            --output /dev/null
+            --data "$payload")"
+          patch_status="${patch_response##*$'\n'}"
+          patch_body="${patch_response%$'\n'*}"
+          if [[ ! "$patch_status" =~ ^2[0-9][0-9]$ ]]; then
+            printf 'Coolify application update failed (HTTP %s):\n%s\n' \
+              "$patch_status" "$patch_body" >&2
+            exit 1
+          fi
 
-          response="$(curl --fail-with-body --silent --show-error \
+          response="$(curl --silent --show-error --write-out $'\n%{http_code}' \
             --request POST \
             --url "${application_url}/start?force=true" \
+            --header "Accept: application/json" \
             --header "Authorization: Bearer ${COOLIFY_API_TOKEN}")"
+          response_status="${response##*$'\n'}"
+          response="${response%$'\n'*}"
+          if [[ ! "$response_status" =~ ^2[0-9][0-9]$ ]]; then
+            printf 'Coolify deployment request failed (HTTP %s):\n%s\n' \
+              "$response_status" "$response" >&2
+            exit 1
+          fi
+
           deployment_uuid="$(jq -er '.deployment_uuid | strings | select(length > 0)' \
             <<< "$response")"
 
           printf 'Release %s (%s) queued as deployment %s\n' \
-            "$RELEASE_TAG" "$RELEASE_SHA" "$deployment_uuid"
+            "$RELEASE_TAG" "$IMAGE_NAME:$IMAGE_TAG" "$deployment_uuid"
