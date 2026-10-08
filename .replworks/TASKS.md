@@ -1,4 +1,4 @@
-- [ ] T-001 Establish the project foundation
+- [X] T-001 Establish the project foundation
   - Satisfies: PRODUCT_SPEC.md §§1, 3–6
   - External boundary: no
   - Acceptance criteria:
