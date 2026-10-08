@@ -103,6 +103,41 @@ export function makeUrlTargets(
   return uniqueTargets;
 }
 
+export function makePrefixTarget(
+  service: string,
+  imageHost: string,
+  catalog: readonly string[],
+  rawPath: string,
+  confirmation?: string,
+): string {
+  const catalogSet = new Set(validateCatalog(catalog));
+  if (!catalogSet.has(service)) {
+    throw new Error('V1: service must be selected from the predefined catalog');
+  }
+
+  const trimmed = rawPath.trim();
+  if (trimmed.length === 0) {
+    if (confirmation !== service) {
+      throw new Error('V5: entire-service prefix purge requires confirmation matching the selected service');
+    }
+    return `${imageHost}/${service}/`;
+  }
+
+  if (trimmed.includes('?') || trimmed.includes('#')) {
+    throw new Error('V4: prefix path must not contain a query string');
+  }
+
+  const normalized = trimmed.replace(/^\/+/, '');
+  if (normalized.length === 0) {
+    if (confirmation !== service) {
+      throw new Error('V5: entire-service prefix purge requires confirmation matching the selected service');
+    }
+    return `${imageHost}/${service}/`;
+  }
+
+  return `${imageHost}/${service}/${normalized}`;
+}
+
 function responseReason(payload: unknown): string {
   if (payload && typeof payload === 'object' && 'errors' in payload) {
     const errors = (payload as { errors?: { message?: string }[] }).errors;
@@ -169,6 +204,62 @@ export async function executeUrlPurge(
   }
 }
 
+export async function executePrefixPurge(
+  command: PrefixPurgeCommand,
+  imageHost: string,
+  catalog: readonly string[],
+  zoneId: string,
+  apiToken: string,
+): Promise<PurgeExecutionResult> {
+  try {
+    const target = makePrefixTarget(
+      command.service,
+      imageHost,
+      catalog,
+      command.path,
+      command.confirmation,
+    );
+
+    const response = await fetch(
+      `https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prefixes: [target] }),
+      },
+    );
+
+    const payload = (await response.json().catch(() => null)) as unknown;
+    const success = response.ok && payload !== null && !!(payload as { success?: boolean }).success;
+
+    const result: PurgeOutcome = {
+      target,
+      success,
+      reason: success ? undefined : responseReason(payload),
+    };
+
+    const notice = success
+      ? 'Cloudflare accepted the purge request. Browser caches are not cleared; stale images may remain visible for up to 4 hours.'
+      : undefined;
+
+    return {
+      ok: true,
+      results: [result],
+      notice,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed, reason unknown';
+    return {
+      ok: false,
+      error: message,
+      errors: [message],
+    };
+  }
+}
+
 export async function executePurgeCommand(
   command: PurgeCommand,
   imageHost: string,
@@ -195,8 +286,14 @@ export async function executePurgeCommand(
     return executeUrlPurge(command, imageHost, catalog, zoneId, apiToken);
   }
 
-  return {
-    ok: false,
-    errors: ['Prefix mode is not available yet'],
-  };
+  try {
+    return await executePrefixPurge(command, imageHost, catalog, zoneId, apiToken);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed, reason unknown';
+    return {
+      ok: false,
+      error: message,
+      errors: [message],
+    };
+  }
 }
