@@ -34,7 +34,7 @@ Keywords MUST, MUST NOT, SHOULD are used in the RFC 2119 sense.
 - The landing page is already prepared. Its content and layout are finalized in a separate discussion between the owner and a coding AI. This spec does NOT define its content.
 - Constraints this spec places on it:
   - **L1** `/` MUST be publicly reachable without authentication.
-  - **L2** `/` MUST NOT link to or mention `/purge`.
+  - **L2** `/` MAY include a direct link to `/purge` as a plain operator utility link. It MUST NOT otherwise describe or promote the purge tool.
   - **L3** `/` MUST work on mobile and desktop viewports.
   - **L4** Not in scope: sign-up, login, pricing, billing, dashboards.
 
