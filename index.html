@@ -100,9 +100,37 @@
             이미지 프록시로 번거로운 리사이즈 작업을 없애고, 이미지 트래픽을 서버와 분리하여 초고속으로 전송합니다.
           </p>
         </div>
+
+        <!-- 실제 원본 이미지 변환 매핑 예시 카드 -->
+        <div class="mt-8 rounded-2xl border-2 border-slate-900 bg-white p-5 sm:p-6 sticker-shadow">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="rounded-md border border-slate-900 bg-emerald-200 px-2 py-0.5 text-[11px] font-extrabold text-slate-900">
+              REAL SAMPLE 🐳
+            </span>
+            <span class="text-xs font-bold text-slate-700">실제 원본 ➔ 프록시 URL 변환 예시</span>
+          </div>
+
+          <div class="grid gap-3 text-xs font-mono sm:grid-cols-2">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <div class="text-[11px] font-bold text-slate-500 mb-1">원본 이미지 (640 × 640 원본)</div>
+              <div class="break-all text-slate-700">https://www.repl.net/art/samples/cute-whale.png</div>
+            </div>
+            <div class="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3">
+              <div class="text-[11px] font-bold text-indigo-700 mb-1">프록시 URL (리사이즈 &amp; WebP 변환)</div>
+              <div class="break-all font-semibold text-indigo-950">
+                https://img.repl.net/<span class="text-amber-700 font-bold underline">repl</span>/art/samples/cute-whale.png?w=320&amp;f=webp
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-start gap-1.5 text-xs text-slate-600">
+            <span class="text-amber-600 font-bold">💡</span>
+            <span>경로의 <code class="rounded bg-slate-100 px-1 py-0.5 font-mono font-bold text-slate-800">repl</code>은 미리 지정된 서비스 식별자로 원본 호스트 <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">www.repl.net</code>을 뜻합니다.</span>
+          </div>
+        </div>
       </header>
 
-      <!-- 인터랙티브 플레이그라운드 & 프로덕트 시연 섹션 -->
+      <!-- 실제 샘플 이미지를 적용한 인터랙티브 플레이그라운드 -->
       <section aria-label="실시간 URL 변환 시연" class="mt-10 sm:mt-12">
         <div class="rounded-2xl border-2 border-slate-900 bg-white p-5 sm:p-7 sticker-shadow-lg">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
@@ -110,14 +138,14 @@
               <span class="inline-flex h-3 w-3 rounded-full bg-rose-400"></span>
               <span class="inline-flex h-3 w-3 rounded-full bg-amber-400"></span>
               <span class="inline-flex h-3 w-3 rounded-full bg-emerald-400"></span>
-              <span class="ml-2 font-mono text-xs font-semibold text-slate-500">Live URL Transformer</span>
+              <span class="ml-2 font-mono text-xs font-semibold text-slate-500">Live Image Proxy Playground</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] text-slate-600">
-                Cache Hit: <strong class="text-emerald-600">99.4%</strong>
+                Target: <strong class="text-indigo-600">cute-whale.png</strong>
               </span>
               <span class="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] text-slate-600">
-                Latency: <strong class="text-indigo-600">&lt; 15ms</strong>
+                Cache: <strong class="text-emerald-600">Edge Miss/Hit</strong>
               </span>
             </div>
           </div>
@@ -125,7 +153,7 @@
           <!-- URL 미리보기 바 -->
           <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
             <div class="flex-1 overflow-x-auto rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 font-mono text-xs sm:text-sm text-slate-800">
-              <span class="font-bold text-indigo-600">https://img.repl.net</span><span class="text-slate-700">/avatar/character.png</span><span id="param-display" class="font-semibold text-amber-600">?w=320&amp;f=webp&amp;q=85</span>
+              <span class="font-bold text-indigo-600">https://img.repl.net</span><span class="text-slate-700">/repl/art/samples/cute-whale.png</span><span id="param-display" class="font-semibold text-amber-600">?w=320&amp;f=webp&amp;q=80</span>
             </div>
             <button
               id="copy-btn"
@@ -139,74 +167,192 @@
             </button>
           </div>
 
-          <!-- 인터랙티브 파라미터 조작 컨트롤 -->
-          <div class="mt-6 grid gap-5 sm:grid-cols-2">
+          <!-- 인터랙티브 파라미터 조작 컨트롤 및 실제 이미지 뷰 -->
+          <div class="mt-6 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
             <!-- 파라미터 제어 버튼군 -->
             <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+              <!-- 너비 w -->
               <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">가로 너비 (w)</label>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="text-xs font-bold uppercase tracking-wider text-slate-700">너비 (w)</label>
+                  <span class="font-mono text-[11px] text-slate-500">기본값: 0 (비율 유지 자동)</span>
+                </div>
                 <div class="flex flex-wrap gap-2" id="width-buttons">
-                  <button type="button" data-w="120" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                  <button type="button" data-w="120" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
                     120px <span class="text-[10px] text-slate-500 font-normal">아이콘</span>
                   </button>
-                  <button type="button" data-w="320" class="w-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-950 transition cursor-pointer">
+                  <button type="button" data-w="240" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    240px <span class="text-[10px] text-slate-500 font-normal">썸네일</span>
+                  </button>
+                  <button type="button" data-w="320" class="w-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-2.5 py-1 text-xs font-bold text-indigo-950 transition cursor-pointer">
                     320px <span class="text-[10px] text-indigo-700 font-normal">카드</span>
                   </button>
-                  <button type="button" data-w="640" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
-                    640px <span class="text-[10px] text-slate-500 font-normal">고해상도</span>
+                  <button type="button" data-w="480" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    480px <span class="text-[10px] text-slate-500 font-normal">미디엄</span>
+                  </button>
+                  <button type="button" data-w="640" class="w-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    640px <span class="text-[10px] text-slate-500 font-normal">원본크기</span>
                   </button>
                 </div>
               </div>
 
+              <!-- 포맷 f -->
               <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">포맷 변환 (f)</label>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="text-xs font-bold uppercase tracking-wider text-slate-700">포맷 (f)</label>
+                  <span class="font-mono text-[11px] text-slate-500">기본값: Accept 헤더 기준</span>
+                </div>
                 <div class="flex flex-wrap gap-2" id="format-buttons">
-                  <button type="button" data-f="webp" class="f-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-950 transition cursor-pointer">
-                    WebP <span class="rounded bg-emerald-200 px-1 py-0.2 text-[9px] text-emerald-900 font-extrabold">-70%</span>
+                  <button type="button" data-f="webp" class="f-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-2.5 py-1 text-xs font-bold text-indigo-950 transition cursor-pointer">
+                    webp <span class="rounded bg-emerald-200 px-1 text-[9px] text-emerald-900 font-extrabold">-98%</span>
                   </button>
-                  <button type="button" data-f="avif" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
-                    AVIF <span class="rounded bg-sky-200 px-1 py-0.2 text-[9px] text-sky-900 font-extrabold">-85%</span>
+                  <button type="button" data-f="avif" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    avif <span class="rounded bg-sky-200 px-1 text-[9px] text-sky-900 font-extrabold">-98.5%</span>
                   </button>
-                  <button type="button" data-f="png" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
-                    PNG <span class="text-[10px] text-slate-500 font-normal">원본</span>
+                  <button type="button" data-f="jpeg" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    jpeg <span class="text-[10px] text-slate-500 font-normal">표준</span>
+                  </button>
+                  <button type="button" data-f="png" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    png <span class="text-[10px] text-slate-500 font-normal">무손실</span>
+                  </button>
+                  <button type="button" data-f="" class="f-btn rounded-lg border-2 border-slate-900 bg-white px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                    (생략) <span class="text-[10px] text-slate-500 font-normal">Accept</span>
                   </button>
                 </div>
               </div>
 
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">압축 품질 (q)</label>
-                <div class="flex flex-wrap gap-2" id="quality-buttons">
-                  <button type="button" data-q="75" class="q-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
-                    75 <span class="text-[10px] text-slate-500 font-normal">경량</span>
-                  </button>
-                  <button type="button" data-q="85" class="q-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-950 transition cursor-pointer">
-                    85 <span class="text-[10px] text-indigo-700 font-normal">권장</span>
-                  </button>
-                  <button type="button" data-q="95" class="q-btn rounded-lg border-2 border-slate-900 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
-                    95 <span class="text-[10px] text-slate-500 font-normal">고화질</span>
-                  </button>
+              <!-- 리사이징 방식 fit & 품질 q -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-700">방식 (fit)</label>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5" id="fit-buttons">
+                    <button type="button" data-fit="fit" class="fit-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-2 py-1 text-xs font-bold text-indigo-950 transition cursor-pointer">
+                      fit
+                    </button>
+                    <button type="button" data-fit="fill" class="fit-btn rounded-lg border-2 border-slate-900 bg-white px-2 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                      fill
+                    </button>
+                    <button type="button" data-fit="auto" class="fit-btn rounded-lg border-2 border-slate-900 bg-white px-2 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                      auto
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-700">품질 (q)</label>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5" id="quality-buttons">
+                    <button type="button" data-q="60" class="q-btn rounded-lg border-2 border-slate-900 bg-white px-2 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                      60
+                    </button>
+                    <button type="button" data-q="80" class="q-btn rounded-lg border-2 border-slate-900 bg-indigo-100 px-2 py-1 text-xs font-bold text-indigo-950 transition cursor-pointer">
+                      80 (기본)
+                    </button>
+                    <button type="button" data-q="95" class="q-btn rounded-lg border-2 border-slate-900 bg-white px-2 py-1 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                      95
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- 시각적 프리뷰 카드 & 실시간 용량 절감 지표 -->
-            <div class="flex flex-col items-center justify-between rounded-xl border-2 border-dashed border-slate-300 bg-gradient-to-b from-slate-50 to-amber-50/30 p-5">
+            <!-- 실제 샘플 이미지 렌더링 뷰 -->
+            <div class="flex flex-col items-center justify-between rounded-xl border-2 border-dashed border-slate-300 bg-gradient-to-b from-slate-50 to-sky-50/30 p-4">
               <div class="w-full flex items-center justify-between text-xs font-mono text-slate-500">
-                <span>PREVIEW CANVAS</span>
-                <span id="dimension-badge" class="font-bold text-slate-700">320 × 320 px</span>
+                <span class="flex items-center gap-1.5">
+                  <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+                  LIVE IMAGE VIEW
+                </span>
+                <span id="dimension-badge" class="font-bold text-slate-700">320 px</span>
               </div>
 
-              <div class="my-auto flex items-center justify-center p-3">
-                <div id="preview-box" class="flex flex-col items-center justify-center rounded-2xl border-2 border-slate-900 bg-white p-3 sticker-shadow transition-all duration-300" style="width: 140px; height: 140px;">
-                  <div class="text-3xl select-none" id="preview-emoji">🦊</div>
-                  <span class="mt-2 text-[10px] font-mono font-bold text-indigo-600" id="preview-label">320px .webp</span>
+              <div class="my-3 flex items-center justify-center min-h-[180px] w-full">
+                <div class="relative flex flex-col items-center justify-center rounded-2xl border-2 border-slate-900 bg-white p-3 sticker-shadow transition-all duration-300">
+                  <img
+                    id="sample-image"
+                    src="https://img.repl.net/repl/art/samples/cute-whale.png?w=320&amp;f=webp&amp;q=80"
+                    alt="귀여운 고래 샘플 이미지"
+                    class="h-auto max-h-44 w-auto rounded-lg object-contain transition-all duration-200"
+                    width="160"
+                  />
+                  <div class="mt-2 flex items-center gap-2">
+                    <span id="preview-label" class="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                      320px • webp
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500">원본 412 KB</span>
+                  </div>
                 </div>
               </div>
 
               <div class="w-full rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-center text-xs font-medium text-emerald-900">
-                🚀 예상 전송 용량: <strong class="line-through text-slate-400 font-normal">1.8 MB</strong> ➔ <strong id="size-badge" class="font-bold text-emerald-700">42 KB (-97.6%)</strong>
+                🚀 실시간 응답: <strong class="line-through text-slate-400 font-normal">412 KB (PNG)</strong> ➔ <strong id="size-badge" class="font-bold text-emerald-700">~12 KB (WebP, -97%)</strong>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 쿼리 파라미터 규격 매뉴얼 (Query Parameter Reference Manual) -->
+      <section aria-label="쿼리 파라미터 매뉴얼" class="mt-12">
+        <div class="rounded-2xl border-2 border-slate-900 bg-white p-5 sm:p-7 sticker-shadow">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
+            <div>
+              <div class="inline-block rounded-md border border-slate-900 bg-amber-200 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-900">
+                Specification 📖
+              </div>
+              <h2 class="mt-2 text-xl font-bold tracking-tight text-slate-950">
+                이미지 프록시 쿼리 파라미터 규칙
+              </h2>
+            </div>
+            <span class="font-mono text-xs text-slate-500">Manual &amp; API Reference</span>
+          </div>
+
+          <div class="mt-5 overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b-2 border-slate-900 bg-slate-50 font-mono text-[11px] text-slate-700">
+                  <th class="py-2.5 px-3 font-extrabold">이름</th>
+                  <th class="py-2.5 px-3 font-extrabold">기본값</th>
+                  <th class="py-2.5 px-3 font-extrabold">범위 / 허용 값</th>
+                  <th class="py-2.5 px-3 font-extrabold">설명</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="py-3 px-3 font-mono font-bold text-indigo-700">w</td>
+                  <td class="py-3 px-3 font-mono text-slate-500">0</td>
+                  <td class="py-3 px-3 font-mono text-slate-600">0 ~ 2000</td>
+                  <td class="py-3 px-3">너비(px). <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">0</code>이면 비율에 맞춰 자동 계산</td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="py-3 px-3 font-mono font-bold text-indigo-700">h</td>
+                  <td class="py-3 px-3 font-mono text-slate-500">0</td>
+                  <td class="py-3 px-3 font-mono text-slate-600">0 ~ 2000</td>
+                  <td class="py-3 px-3">높이(px). <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">0</code>이면 비율에 맞춰 자동 계산</td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="py-3 px-3 font-mono font-bold text-indigo-700">fit</td>
+                  <td class="py-3 px-3 font-mono text-slate-500">fit</td>
+                  <td class="py-3 px-3 font-mono text-slate-600">fit / fill / auto</td>
+                  <td class="py-3 px-3">리사이징 방식. 그 외 값은 <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">fit</code>으로 처리</td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="py-3 px-3 font-mono font-bold text-indigo-700">q</td>
+                  <td class="py-3 px-3 font-mono text-slate-500">80</td>
+                  <td class="py-3 px-3 font-mono text-slate-600">1 ~ 100</td>
+                  <td class="py-3 px-3">품질. 없거나 <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">0</code>이면 80으로 처리</td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="py-3 px-3 font-mono font-bold text-indigo-700">f</td>
+                  <td class="py-3 px-3 font-mono text-slate-500">Accept 헤더</td>
+                  <td class="py-3 px-3 font-mono text-slate-600">avif / webp / jpeg / png</td>
+                  <td class="py-3 px-3">출력 포맷을 직접 지정. 브라우저의 <code class="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-800">Accept</code> 헤더보다 우선 적용</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -232,8 +378,8 @@
           </div>
 
           <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3 font-mono text-xs text-slate-700">
-            <div class="text-rose-600 line-through">❌ avatar_sm.png, avatar_lg.png, avatar_2x.png...</div>
-            <div class="mt-1 font-semibold text-emerald-600">✅ URL 파라미터(?w=320) 하나로 즉시 해결</div>
+            <div class="text-rose-600 line-through">❌ cute-whale-100.png, cute-whale-300.png...</div>
+            <div class="mt-1 font-semibold text-emerald-600">✅ ?w=320&amp;f=webp 하나로 자동 생성 &amp; 캐싱</div>
           </div>
         </article>
 
@@ -289,50 +435,60 @@
       (function () {
         let currentW = '320';
         let currentF = 'webp';
-        let currentQ = '85';
+        let currentFit = 'fit';
+        let currentQ = '80';
+
+        const baseUrl = 'https://img.repl.net/repl/art/samples/cute-whale.png';
 
         const paramDisplay = document.getElementById('param-display');
         const dimensionBadge = document.getElementById('dimension-badge');
-        const previewBox = document.getElementById('preview-box');
+        const sampleImage = document.getElementById('sample-image');
         const previewLabel = document.getElementById('preview-label');
         const sizeBadge = document.getElementById('size-badge');
         const copyBtn = document.getElementById('copy-btn');
         const copyBtnText = document.getElementById('copy-btn-text');
 
-        const sizeMap = {
-          '120': { 'webp': '8 KB (-99.5%)', 'avif': '5 KB (-99.7%)', 'png': '45 KB (-97.5%)' },
-          '320': { 'webp': '42 KB (-97.6%)', 'avif': '28 KB (-98.4%)', 'png': '190 KB (-89.4%)' },
-          '640': { 'webp': '125 KB (-93.0%)', 'avif': '85 KB (-95.2%)', 'png': '680 KB (-62.2%)' }
+        const sizeEstimateMap = {
+          '120': { 'webp': '~4 KB (-99%)', 'avif': '~3 KB (-99.2%)', 'jpeg': '~6 KB (-98.5%)', 'png': '~35 KB (-91.5%)', '': '~4 KB (-99%)' },
+          '240': { 'webp': '~8 KB (-98%)', 'avif': '~6 KB (-98.5%)', 'jpeg': '~14 KB (-96.6%)', 'png': '~80 KB (-80.5%)', '': '~8 KB (-98%)' },
+          '320': { 'webp': '~12 KB (-97%)', 'avif': '~8 KB (-98%)', 'jpeg': '~20 KB (-95.1%)', 'png': '~135 KB (-67.2%)', '': '~12 KB (-97%)' },
+          '480': { 'webp': '~22 KB (-94.6%)', 'avif': '~15 KB (-96.3%)', 'jpeg': '~38 KB (-90.7%)', 'png': '~240 KB (-41.7%)', '': '~22 KB (-94.6%)' },
+          '640': { 'webp': '~36 KB (-91.2%)', 'avif': '~24 KB (-94.1%)', 'jpeg': '~60 KB (-85.4%)', 'png': '~412 KB (0%)', '': '~36 KB (-91.2%)' }
         };
 
-        const boxSizeMap = {
-          '120': { width: '90px', height: '90px', emoji: '🐱' },
-          '320': { width: '130px', height: '130px', emoji: '🦊' },
-          '640': { width: '170px', height: '170px', emoji: '🦁' }
-        };
+        function buildQueryString() {
+          const parts = [];
+          if (currentW && currentW !== '0') parts.push('w=' + currentW);
+          if (currentFit && currentFit !== 'fit') parts.push('fit=' + currentFit);
+          if (currentF) parts.push('f=' + currentF);
+          if (currentQ && currentQ !== '80') parts.push('q=' + currentQ);
+          return parts.length > 0 ? '?' + parts.join('&') : '';
+        }
 
         function updateUI() {
+          const queryString = buildQueryString();
           if (paramDisplay) {
-            paramDisplay.textContent = '?w=' + currentW + '&f=' + currentF + '&q=' + currentQ;
+            paramDisplay.textContent = queryString || ' (파라미터 없음, 기본값)';
           }
           if (dimensionBadge) {
-            dimensionBadge.textContent = currentW + ' × ' + currentW + ' px';
+            dimensionBadge.textContent = currentW + ' px';
           }
-          if (previewBox && boxSizeMap[currentW]) {
-            previewBox.style.width = boxSizeMap[currentW].width;
-            previewBox.style.height = boxSizeMap[currentW].height;
-            const emojiEl = document.getElementById('preview-emoji');
-            if (emojiEl) emojiEl.textContent = boxSizeMap[currentW].emoji;
+          if (sampleImage) {
+            sampleImage.src = baseUrl + queryString;
+            // width 조절
+            const displayWidth = Math.min(Math.max(parseInt(currentW, 10) / 2, 80), 220);
+            sampleImage.style.maxWidth = displayWidth + 'px';
           }
           if (previewLabel) {
-            previewLabel.textContent = currentW + 'px .' + currentF;
+            previewLabel.textContent = currentW + 'px • ' + (currentF || 'auto') + ' • ' + currentFit;
           }
-          if (sizeBadge && sizeMap[currentW] && sizeMap[currentW][currentF]) {
-            sizeBadge.textContent = sizeMap[currentW][currentF];
+          if (sizeBadge && sizeEstimateMap[currentW]) {
+            const estimate = sizeEstimateMap[currentW][currentF] || '~15 KB';
+            sizeBadge.textContent = estimate;
           }
         }
 
-        // Width buttons
+        // 너비 버튼 (w)
         document.querySelectorAll('.w-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             document.querySelectorAll('.w-btn').forEach(function (b) {
@@ -346,7 +502,7 @@
           });
         });
 
-        // Format buttons
+        // 포맷 버튼 (f)
         document.querySelectorAll('.f-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             document.querySelectorAll('.f-btn').forEach(function (b) {
@@ -355,12 +511,26 @@
             });
             btn.classList.remove('bg-white', 'text-slate-800');
             btn.classList.add('bg-indigo-100', 'text-indigo-950');
-            currentF = btn.getAttribute('data-f') || 'webp';
+            currentF = btn.getAttribute('data-f') || '';
             updateUI();
           });
         });
 
-        // Quality buttons
+        // 리사이징 방식 버튼 (fit)
+        document.querySelectorAll('.fit-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.fit-btn').forEach(function (b) {
+              b.classList.remove('bg-indigo-100', 'text-indigo-950');
+              b.classList.add('bg-white', 'text-slate-800');
+            });
+            btn.classList.remove('bg-white', 'text-slate-800');
+            btn.classList.add('bg-indigo-100', 'text-indigo-950');
+            currentFit = btn.getAttribute('data-fit') || 'fit';
+            updateUI();
+          });
+        });
+
+        // 품질 버튼 (q)
         document.querySelectorAll('.q-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             document.querySelectorAll('.q-btn').forEach(function (b) {
@@ -369,15 +539,15 @@
             });
             btn.classList.remove('bg-white', 'text-slate-800');
             btn.classList.add('bg-indigo-100', 'text-indigo-950');
-            currentQ = btn.getAttribute('data-q') || '85';
+            currentQ = btn.getAttribute('data-q') || '80';
             updateUI();
           });
         });
 
-        // Copy button
+        // URL 복사 버튼
         if (copyBtn) {
           copyBtn.addEventListener('click', function () {
-            const url = 'https://img.repl.net/avatar/character.png?w=' + currentW + '&f=' + currentF + '&q=' + currentQ;
+            const url = baseUrl + buildQueryString();
             if (navigator.clipboard && navigator.clipboard.writeText) {
               navigator.clipboard.writeText(url).then(showCopied, function () { fallbackCopy(url); });
             } else {
