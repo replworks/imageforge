@@ -15,7 +15,7 @@ Rule IDs from PRODUCT_SPEC.md (L1, V3, S4, A5, ...) are referenced, not restated
 ## 2. Core Concepts
 
 - **Application**: the set of components C1–C8 below. One application serves the whole host.
-- **Public Zone**: the request path exactly `/` or `/health`.
+- **Public Zone**: the request path exactly `/`, `/health`, or `/og.png`.
 - **Protected Zone**: the request path `/purge` and every path below it, whether or not that path exists.
 - **Unknown Zone**: every other request path.
 - **Operator**: the single owner. Identity policy (who counts as the operator) lives in the Edge Identity Layer, not in this application.
@@ -44,6 +44,11 @@ Rule IDs from PRODUCT_SPEC.md (L1, V3, S4, A5, ...) are referenced, not restated
 
 1. A `GET /health` request arrives at C1.
 2. C1 returns HTTP 200 with an empty body without invoking C2 or any external party.
+
+**Flow 1b — Open Graph image**
+
+1. A `GET /og.png` request arrives at C1.
+2. C1 classifies it Public Zone and returns the image asset without invoking C2.
 
 **Flow 2 — Operator opens the console**
 

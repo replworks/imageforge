@@ -54,6 +54,24 @@ describe("public landing page", () => {
     );
   });
 
+  it("L1 serves og.png publicly when provided without authentication", async () => {
+    const fakeImage = new Uint8Array([137, 80, 78, 71]);
+    const app = createApp(
+      landingDocument,
+      purgeDocument,
+      denyIdentity,
+      [],
+      undefined,
+      fakeImage,
+    );
+    const response = await app.request("/og.png");
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toBe("image/png");
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    expect(bytes).toEqual(fakeImage);
+  });
+
   it("L1 keeps the public document independent from unknown routes and cache policy", async () => {
     const app = createTestApp();
     const before = await app.request("/");
