@@ -17,6 +17,7 @@ export function createApp(
     ok: false,
     errors: ['Purge execution is not configured'],
   }),
+  ogImage?: Uint8Array<ArrayBuffer> | null,
 ): Hono {
   const app = new Hono();
   const services = catalog.filter((service) => service.trim().length > 0);
@@ -26,6 +27,17 @@ export function createApp(
       'Content-Type': 'text/html; charset=utf-8',
     }),
   );
+
+  if (ogImage) {
+    app.get(
+      '/og.png',
+      (context) =>
+        context.body(ogImage.buffer, 200, {
+          'Content-Type': 'image/png',
+          'Cache-Control': 'public, max-age=86400',
+        }),
+    );
+  }
 
   app.get('/health', (context) => context.body(null, 200));
 

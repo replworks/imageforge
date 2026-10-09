@@ -12,6 +12,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/build ./build
 COPY --from=build /app/index.html ./index.html
+COPY --from=build /app/og.png ./og.png
 COPY --from=build /app/dist ./dist
 USER node
 EXPOSE 3000

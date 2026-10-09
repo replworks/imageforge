@@ -18,6 +18,9 @@ const verifyIdentity = createIdentityVerifier(
   config.cfAccessTeamDomain,
   config.cfAccessAud,
 );
+const ogImage = await readFile(new URL('../og.png', import.meta.url)).catch(
+  () => null,
+);
 const app = createApp(
   landingDocument,
   purgeDocument,
@@ -31,6 +34,7 @@ const app = createApp(
       config.cfZoneId,
       config.cfApiToken,
     ),
+  ogImage,
 );
 
 serve({
