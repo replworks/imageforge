@@ -21,7 +21,7 @@
   - External boundary: yes
   - Acceptance criteria:
     - A browser E2E check against the local development server loads `/` without authentication at mobile and desktop viewport sizes. A passing local check counts as production-equivalent verification; a production deployment is not required.
-    - The landing response is identical regardless of identity, and the page neither links to nor mentions `/purge`.
+    - The landing response is identical regardless of identity, and the page includes only a plain operator utility link to `/purge`, without otherwise describing or promoting the purge tool.
     - An unauthenticated `GET /health` returns HTTP 200 with an empty body and does not contact an external service or expose configuration or credentials, as required by PRODUCT_SPEC.md §3.1 (H1, H2).
     - Landing-page failure does not change Protected Zone behavior, and Protected Zone failure does not change landing-page behavior, as required by ARCHITECTURE.md §9 (FB6, I8).
     - No application response sets or overrides the browser-cache lifetime for images served from `img.repl.net`, as required by PRODUCT_SPEC.md §5 and ARCHITECTURE.md §8 (AR10).

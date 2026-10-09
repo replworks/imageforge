@@ -31,11 +31,18 @@ describe("public landing page", () => {
     expect(anonymous.headers.get("content-type")).toContain("text/html");
   });
 
-  it("L2 has no link or mention of the protected path", async () => {
+  it("L2 includes only a plain operator utility link to the protected path", async () => {
     const response = await createTestApp().request("/");
     const document = await response.text();
+    const links = [
+      ...document.matchAll(
+        /<a\b[^>]*href="\/purge\/"[^>]*>([\s\S]*?)<\/a>/gi,
+      ),
+    ];
 
-    expect(document).not.toContain("/purge");
+    expect(links).toHaveLength(1);
+    expect(links[0]?.[1]?.replace(/<[^>]*>/g, "").trim()).toBe("/purge");
+    expect(document.replace(links[0]?.[0] ?? "", "")).not.toContain("/purge");
   });
 
   it("L3 declares a responsive viewport for mobile and desktop browsers", async () => {
