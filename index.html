@@ -414,14 +414,16 @@
       </section>
 
       <!-- 하단 푸터 (L2 단일 링크 요구사항 만족) -->
-      <footer class="mt-auto pt-14 pb-8 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 text-sm text-slate-500 font-medium">
-        <div class="flex items-center gap-2">
-          <span>© img.repl.net</span>
-          <span class="text-slate-300">•</span>
-          <span>Fast, Lightweight Edge Image Proxy</span>
+      <footer class="mt-auto pt-14 pb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-200 text-sm text-slate-500 font-medium">
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2 order-2 sm:order-1">
+          <span class="order-2 sm:order-1">
+            © <a href="https://www.repl.net" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-700 underline underline-offset-4 decoration-slate-300 hover:text-slate-950">REPL Works</a>
+          </span>
+          <span class="hidden sm:inline text-slate-300 sm:order-2" aria-hidden="true">•</span>
+          <span class="order-1 sm:order-3 text-slate-500">Fast, Lightweight Edge Image Proxy</span>
         </div>
 
-        <div>
+        <div class="order-1 sm:order-2">
           운영 도구
           <a class="ml-2 font-mono font-bold text-slate-800 underline underline-offset-4 hover:text-indigo-600" href="/purge/">
             /purge
