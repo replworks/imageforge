@@ -1,5 +1,19 @@
 # Release Notes
 
+## v1.0.0 - 2026-10-09
+
+### What's Changed
+
+* feat: mark T-004 as complete and update package.json to allow fsevents by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/14
+* feat: implement service catalog display in operator console and update app structure by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/15
+* feat: implement purge functionality with URL handling and validation by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/16
+* feat: implement prefix purge functionality with validation and execution logic by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/17
+* feat: add LICENSE and README files, update package.json to set private to false by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/18
+* feat: update l2 test to verify presence of plain operator link by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/19
+* feat: add Open Graph image support and update architecture documentation by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/20
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v0.2.0...v1.0.0
+
 ## v0.2.0 - 2026-10-08
 
 ### What's Changed
