@@ -85,7 +85,7 @@ function updatePlaceholder(): void {
   pathInput.placeholder =
     selectedMode === 'url'
       ? `https://img.repl.net/${service}/assets/seo/og.png?w=640\nhttps://img.repl.net/${service}/images/banner.jpg?format=webp`
-      : `/${service}/`;
+      : `https://img.repl.net/${service}/assets/seo/og.png?w=640`;
 }
 
 function setMode(mode: 'url' | 'prefix'): void {
@@ -99,6 +99,10 @@ function setMode(mode: 'url' | 'prefix'): void {
     button.classList.toggle('border-slate-300', !active);
     button.classList.toggle('bg-slate-100', !active);
     button.classList.toggle('text-slate-700', !active);
+  }
+
+  if (pathInput) {
+    pathInput.rows = mode === 'url' ? 6 : 1;
   }
 
   updatePlaceholder();
@@ -201,6 +205,42 @@ async function loadCatalog(): Promise<void> {
   }
 }
 
+async function sendExecute(body: Record<string, unknown>): Promise<void> {
+  if (!executeButton) {
+    return;
+  }
+
+  executeButton.disabled = true;
+  executeButton.textContent = '처리 중...';
+
+  try {
+    const response = await fetch('/purge/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const payload = (await response.json()) as {
+      ok?: boolean;
+      errors?: string[];
+      notice?: string;
+      results?: Array<{ target: string; success: boolean; reason?: string }>;
+    };
+
+    if (!response.ok || payload.ok === false) {
+      renderErrors(payload.errors ?? ['업스트림 요청을 처리할 수 없습니다.']);
+      return;
+    }
+
+    renderResults(payload);
+  } catch {
+    renderErrors(['요청 처리 중 오류가 발생했습니다.']);
+  } finally {
+    executeButton.disabled = false;
+    executeButton.textContent = '실행';
+  }
+}
+
 async function executePurge(): Promise<void> {
   if (!serviceSelect || !pathInput || !resultArea || !executeButton) {
     return;
@@ -226,39 +266,25 @@ async function executePurge(): Promise<void> {
       return;
     }
 
-    executeButton.disabled = true;
-    executeButton.textContent = '처리 중...';
-
-    try {
-      const response = await fetch('/purge/execute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'url', service, paths: lines }),
-      });
-
-      const payload = (await response.json()) as {
-        ok?: boolean;
-        errors?: string[];
-        notice?: string;
-        results?: Array<{ target: string; success: boolean; reason?: string }>;
-      };
-
-      if (!response.ok || payload.ok === false) {
-        renderErrors(payload.errors ?? ['업스트림 요청을 처리할 수 없습니다.']);
-        return;
-      }
-
-      renderResults(payload);
-    } catch {
-      renderErrors(['요청 처리 중 오류가 발생했습니다.']);
-    } finally {
-      executeButton.disabled = false;
-      executeButton.textContent = '실행';
-    }
+    await sendExecute({ mode: 'url', service, paths: lines });
     return;
   }
 
-  renderErrors(['Prefix 모드는 아직 지원하지 않습니다.']);
+  const path = rawPathText.trim();
+
+  if (path.length === 0) {
+    const confirmed = window.confirm(
+      `경로를 비워두면 "${service}" 서비스 전체 캐시를 삭제합니다. 계속하시겠습니까?`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    await sendExecute({ mode: 'prefix', service, path: '', confirmation: service });
+    return;
+  }
+
+  await sendExecute({ mode: 'prefix', service, path });
 }
 
 for (const button of modeButtons) {
