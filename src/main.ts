@@ -43,7 +43,7 @@ appRoot.innerHTML = `
           id="path-input"
           rows="6"
           class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-          placeholder="/images/logo.png?width=800\n/images/banner.jpg?format=webp"
+          placeholder="https://img.repl.net/wifinote/assets/seo/og.png?w=640&#10;https://img.repl.net/wifinote/images/banner.jpg?format=webp"
         ></textarea>
       </div>
 
@@ -75,6 +75,19 @@ const modeButtons = [...document.querySelectorAll<HTMLButtonElement>('.mode-butt
 
 let selectedMode: 'url' | 'prefix' = 'url';
 
+function updatePlaceholder(): void {
+  if (!pathInput) {
+    return;
+  }
+
+  const service = serviceSelect?.value || '서비스';
+
+  pathInput.placeholder =
+    selectedMode === 'url'
+      ? `https://img.repl.net/${service}/assets/seo/og.png?w=640\nhttps://img.repl.net/${service}/images/banner.jpg?format=webp`
+      : `/${service}/`;
+}
+
 function setMode(mode: 'url' | 'prefix'): void {
   selectedMode = mode;
 
@@ -88,14 +101,7 @@ function setMode(mode: 'url' | 'prefix'): void {
     button.classList.toggle('text-slate-700', !active);
   }
 
-  if (!pathInput) {
-    return;
-  }
-
-  pathInput.placeholder =
-    mode === 'url'
-      ? '/images/logo.png?width=800\n/images/banner.jpg?format=webp'
-      : '/images/';
+  updatePlaceholder();
 }
 
 function renderErrors(messages: string[]): void {
@@ -187,6 +193,7 @@ async function loadCatalog(): Promise<void> {
 
     serviceSelect.disabled = false;
     catalogStatus.textContent = `${services.length}개의 서비스가 로드되었습니다.`;
+    updatePlaceholder();
   } catch {
     serviceSelect.innerHTML = '<option value="">서비스 목록을 불러오지 못했습니다.</option>';
     serviceSelect.disabled = true;
@@ -262,6 +269,10 @@ for (const button of modeButtons) {
 
 executeButton?.addEventListener('click', () => {
   void executePurge();
+});
+
+serviceSelect?.addEventListener('change', () => {
+  updatePlaceholder();
 });
 
 setMode('url');
