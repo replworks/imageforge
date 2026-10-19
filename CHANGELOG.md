@@ -1,5 +1,16 @@
 # Release Notes
 
+## v1.2.0 - 2026-10-19
+
+### What's Changed
+
+* feat: implement code changes to enhance functionality by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/22
+* docs(readme): add project preview image by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/23
+* Add local dev tooling for testing the /purge console by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/24
+* Wire up Prefix mode in the operator console by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/25
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v1.1.0...v1.2.0
+
 ## v1.1.0 - 2026-10-10
 
 ### What's Changed
