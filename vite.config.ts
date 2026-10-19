@@ -15,6 +15,7 @@ export default defineConfig(({ mode, command }) => {
     base: command === 'build' ? '/purge/' : '/',
     plugins: [tailwindcss()],
     server: {
+      allowedHosts: ['if.repl.test'],
       proxy: {
         '/purge/catalog': backendOrigin,
         '/purge/execute': backendOrigin,
