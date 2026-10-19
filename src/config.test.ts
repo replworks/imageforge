@@ -52,4 +52,14 @@ describe('configuration', () => {
       'Missing or invalid required configuration: CF_ZONE_ID',
     );
   });
+
+  it('DB1 keeps the Cloudflare Access dev bypass off unless explicitly enabled', () => {
+    expect(loadConfig(validEnv).cfAccessDevBypass).toBe(false);
+    expect(
+      loadConfig({ ...validEnv, CF_ACCESS_DEV_BYPASS: 'true' }).cfAccessDevBypass,
+    ).toBe(false);
+    expect(
+      loadConfig({ ...validEnv, CF_ACCESS_DEV_BYPASS: '1' }).cfAccessDevBypass,
+    ).toBe(true);
+  });
 });

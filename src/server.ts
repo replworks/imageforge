@@ -14,10 +14,15 @@ const purgeDocument = await readFile(
   new URL('../dist/purge/index.html', import.meta.url),
   'utf8',
 );
-const verifyIdentity = createIdentityVerifier(
-  config.cfAccessTeamDomain,
-  config.cfAccessAud,
-);
+if (config.cfAccessDevBypass) {
+  console.warn(
+    'CF_ACCESS_DEV_BYPASS=1: Cloudflare Access verification is disabled. Local development only — never set this in production.',
+  );
+}
+
+const verifyIdentity = config.cfAccessDevBypass
+  ? async () => true
+  : createIdentityVerifier(config.cfAccessTeamDomain, config.cfAccessAud);
 const ogImage = await readFile(new URL('../og.png', import.meta.url)).catch(
   () => null,
 );

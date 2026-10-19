@@ -129,10 +129,50 @@ npm run build
 npm start
 ```
 
+## 로컬에서 `/purge` 화면 테스트하기
+
+`/purge`는 Cloudflare Access 인증이 걸려 있어서, `npm run dev`로 띄운 로컬 서버에 그냥 접속하면 항상 401이 뜹니다. UI/동작만 로컬에서 확인하려면 두 가지를 같이 사용하세요.
+
+1. **Cloudflare Access 인증 우회** — `.env`에 다음을 추가합니다.
+
+   ```bash
+   CF_ACCESS_DEV_BYPASS=1
+   ```
+
+   이 값이 정확히 `1`일 때만 `/purge` 라우트의 Cloudflare Access JWT 검증을 건너뜁니다. 로컬 개발 전용이며, 배포 환경 변수에는 절대 설정하면 안 됩니다. 기본값은 꺼짐(`0`)입니다.
+
+2. **Vite dev 서버 + 백엔드를 같이 실행** — Vite(`npm run dev`)는 화면만 서빙하고, `/purge/catalog`·`/purge/execute` 요청은 로컬 Hono 서버로 프록시됩니다. 그래서 백엔드도 같이 떠 있어야 합니다.
+
+   한 터미널에서 빌드와 두 서버를 모두 실행:
+
+   ```bash
+   npm run dev:purge
+   ```
+
+   또는 직접 두 터미널로 나눠서:
+
+   ```bash
+   npm run build
+   node --env-file-if-exists=.env build/server.js   # 터미널 1: 백엔드
+   npm run dev                                      # 터미널 2: Vite
+   ```
+
+   이후 `http://localhost:5173/purge/`로 접속하면 운영자 콘솔이 보이고, 서비스 목록도 정상적으로 로드됩니다.
+
+   `npm run dev:purge`는 백엔드를 백그라운드로 띄우고 Vite를 포그라운드로 실행합니다. `Ctrl+C`로 Vite를 끈 뒤에도 백엔드 프로세스가 남아있을 수 있으니, 필요하면 `pkill -f build/server.js`로 정리하세요.
+
+### 실제 Cloudflare 연동을 켜고 끄기
+
+`CF_ACCESS_DEV_BYPASS`는 로그인(접근 제어)만 우회할 뿐, "실행" 버튼을 눌렀을 때 실제 Cloudflare Purge API로 요청이 나가는지와는 무관합니다. `CF_ZONE_ID`/`CF_API_TOKEN`은 둘 다 필수 환경 변수라서 비워두면 서버가 기동하지 않으므로, 연동을 끄고 싶을 때는 **값을 더미 문자열로 바꿔치기**하세요.
+
+- 실제 Cloudflare와 연동해서 테스트: `.env`에 실제 `CF_ZONE_ID`/`CF_API_TOKEN`을 넣습니다.
+- 디자인/동작만 확인(실제 캐시에 영향 주지 않음): `CF_ZONE_ID=dummy-zone-id`, `CF_API_TOKEN=dummy-token`처럼 가짜 값을 넣습니다. 서버는 정상적으로 기동하지만, "실행"을 눌러도 Cloudflare가 인증 실패로 거절해서 실제 캐시는 지워지지 않습니다.
+
 ## 사용 가능한 스크립트
 
 ```bash
 npm run dev                 # Vite 개발 서버 실행
+npm run dev:purge           # 빌드 + 백엔드(백그라운드) + Vite를 한 번에 실행
 npm run build               # 타입 체크 및 프로덕트 빌드
 npm start                   # 컴파일된 앱 실행
 npm test                    # Vitest 테스트 실행

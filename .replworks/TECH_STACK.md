@@ -31,7 +31,7 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 - `index.html` at project root is the static landing page and MUST NOT be a Vite build input.
 - `purge/index.html` is the Vite entry for the operator application and MUST be served at `/purge/`.
 - `.github/workflows/` holds CI workflow files.
-- Vite `base` MUST be `/purge/`.
+- Vite `base` MUST be `/purge/` for the production build. The dev server MAY use a different `base` so that `purge/index.html` is reachable during local development; this MUST NOT change build output.
 - Landing HTML MUST NOT reference Vite-built assets.
 - Vite output directory: default `dist`. `tsc` `outDir` MUST NOT equal it.
 - Test files MUST match `*.test.ts`.
@@ -62,6 +62,7 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 
 - Configuration source: environment variables only. No config file.
 - Env var names: `PORT`, `SERVICES`, `IMAGE_HOST`, `CF_ZONE_ID`, `CF_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`.
+- Optional env var `CF_ACCESS_DEV_BYPASS` (default off, enabled only by the exact value `1`): local development only, see rule 7.
 - `IMAGE_HOST` value is a bare hostname without scheme.
 - `SERVICES` is a comma-separated list.
 - A missing required env var MUST stop the process at startup.
@@ -87,6 +88,7 @@ Keywords MUST, MUST NOT are used in the RFC 2119 sense.
 - Verification MUST run as Hono middleware on every `/purge` route, including static assets.
 - JWT claims MUST NOT be read without verification.
 - Other identity headers (for example `Cf-Access-Authenticated-User-Email`) MUST NOT be trusted.
+- `CF_ACCESS_DEV_BYPASS=1` MAY replace the JWT verifier with a verifier that always allows the request, for local development only. It MUST NOT be set in any deployed environment and MUST NOT be read from any source other than the process environment.
 - JWT or cryptographic logic MUST NOT be hand-written.
 - `CF_API_TOKEN` MUST be scoped to Zone → Cache Purge on the single zone.
 - Frontend MUST render upstream error text with `textContent`. `innerHTML` MUST NOT be used with external strings.

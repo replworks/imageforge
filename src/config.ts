@@ -6,6 +6,7 @@ export interface AppConfig {
   cfApiToken: string;
   cfAccessTeamDomain: string;
   cfAccessAud: string;
+  cfAccessDevBypass: boolean;
 }
 
 const requiredNames = [
@@ -77,5 +78,6 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     cfApiToken: values.CF_API_TOKEN,
     cfAccessTeamDomain: values.CF_ACCESS_TEAM_DOMAIN,
     cfAccessAud: values.CF_ACCESS_AUD,
+    cfAccessDevBypass: env.CF_ACCESS_DEV_BYPASS?.trim() === '1',
   };
 }
