@@ -5,6 +5,8 @@
 [![update-changelog](https://github.com/replworks/imageforge/actions/workflows/update-changelog.yml/badge.svg)](https://github.com/replworks/imageforge/actions/workflows/update-changelog.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
+![https://if.repl.net](https://if.repl.net/og.png)
+
 ImageForge는 공개 페이지와 운영자 전용 Purge 도구를 함께 제공하는 프로젝트입니다. `img.repl.net`에서 제공되는 이미지 캐시를 빠르게 Purge하고, 운영자는 Cloudflare Purge API를 통해 즉시 정리할 수 있습니다.
 
 이 프로젝트는 공개 랜딩 페이지와 보호된 `/purge` 콘솔을 분리해 운영자 인증을 유지하면서도, 이미지 갱신 직후 캐시를 신속하게 정리할 수 있도록 설계되었습니다.
