@@ -1,5 +1,18 @@
 # Release Notes
 
+## v1.3.0 - 2026-10-20
+
+### What's Changed
+
+* Allow if.repl.test in Vite dev server by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/26
+* feat: add Astro integration to ecosystem by [@replworks-bot](https://github.com/replworks-bot) in https://github.com/replworks/imageforge/pull/27
+
+### New Contributors
+
+* [@replworks-bot](https://github.com/replworks-bot) made their first contribution in https://github.com/replworks/imageforge/pull/27
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v1.2.0...v1.3.0
+
 ## v1.2.0 - 2026-10-19
 
 ### What's Changed
