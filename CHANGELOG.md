@@ -1,5 +1,13 @@
 # Release Notes
 
+## v1.3.1 - 2026-10-21
+
+### What's Changed
+
+* docs(index): add class utility usage section by [@cable8mm](https://github.com/cable8mm) in https://github.com/replworks/imageforge/pull/28
+
+**Full Changelog**: https://github.com/replworks/imageforge/compare/v1.3.0...v1.3.1
+
 ## v1.3.0 - 2026-10-20
 
 ### What's Changed
