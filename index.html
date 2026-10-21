@@ -198,6 +198,62 @@
           </p>
         </div>
 
+        <!-- class 유틸리티를 사용한 최신 사용법 -->
+        <div
+          class="mt-8 -mx-5 sm:mx-0 rounded-none sm:rounded-2xl border-y-2 border-x-0 sm:border-2 border-slate-900 bg-white p-5 sm:p-6 shadow-none sm:sticker-shadow"
+        >
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span
+              class="animate-pulse rounded-md border border-slate-900 bg-gradient-to-r from-violet-300 via-pink-300 to-amber-200 px-2 py-0.5 text-[11px] font-extrabold text-slate-900"
+            >
+              NEW · CLASS UTILITY ✨
+            </span>
+            <span class="text-xs font-bold text-slate-600"
+              >원본 경로는 그대로, 변환 옵션은 class로</span
+            >
+          </div>
+
+          <p class="max-w-2xl text-sm leading-relaxed text-slate-600">
+            프록시 URL을 직접 조립하지 마세요. 원본 이미지에 필요한 변환 옵션을
+            <code class="rounded bg-indigo-50 px-1.5 py-0.5 font-mono text-xs font-bold text-indigo-700 border border-indigo-200"
+              >if-*</code
+            >
+            class로 붙이면 Image Forge가 최종 URL을 만들어줍니다.
+          </p>
+
+          <div class="mt-5 grid gap-3 text-xs font-mono lg:grid-cols-[1.1fr_0.9fr]">
+            <div class="rounded-xl border-2 border-slate-200 bg-slate-50 p-4">
+              <div class="mb-2 text-[11px] font-bold text-slate-500">
+                작성하는 코드
+              </div>
+              <pre class="overflow-x-auto whitespace-pre-wrap break-words text-slate-800"><code>&lt;img
+  src="/art/samples/cute-whale.png"
+  class="if-w-320 if-crop if-webp"
+  alt="귀여운 고래" /&gt;</code></pre>
+            </div>
+            <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4 text-slate-950">
+              <div class="mb-2 text-[11px] font-bold text-indigo-700">
+                Image Forge가 만드는 결과
+              </div>
+              <div class="break-all leading-relaxed text-slate-700">
+                https://img.repl.net/<span class="font-bold text-indigo-700">repl</span>/art/samples/cute-whale.png?<span class="font-bold text-pink-600">w=320&amp;fit=fill&amp;f=webp</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2 text-[11px] font-mono">
+            <span class="rounded-md border border-slate-200 bg-violet-50 px-2 py-1 text-slate-700"
+              ><strong class="text-violet-600">if-w-320</strong> → width</span
+            >
+            <span class="rounded-md border border-slate-200 bg-pink-50 px-2 py-1 text-slate-700"
+              ><strong class="text-pink-600">if-crop</strong> → fit=fill</span
+            >
+            <span class="rounded-md border border-slate-200 bg-amber-50 px-2 py-1 text-slate-700"
+              ><strong class="text-amber-600">if-webp</strong> → format</span
+            >
+          </div>
+        </div>
+
         <!-- 실제 원본 이미지 변환 매핑 예시 카드 -->
         <div
           class="mt-8 -mx-5 sm:mx-0 rounded-none sm:rounded-2xl border-y-2 border-x-0 sm:border-2 border-slate-900 bg-white p-5 sm:p-6 shadow-none sm:sticker-shadow"
